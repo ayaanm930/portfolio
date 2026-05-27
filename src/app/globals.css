@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+  body {
+    background-color: #050810;
+    color: #e2ddd6;
+    overflow-x: hidden;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+  .zone-container {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .zone-content {
+    position: relative;
+    z-index: 10;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 5rem 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .zone-content {
+      padding: 6rem 2rem;
+    }
+  }
+
+  details {
+    position: relative;
+  }
+
+  details summary {
+    list-style: none;
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details .details-body {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.32s ease, opacity 0.24s ease;
+  }
+
+  details[open] .details-body {
+    max-height: 1000px;
+    opacity: 1;
+  }
+
+  .cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.731) 0%, rgba(255,255,255,0) 70%);
+    filter: blur(8px);
+    will-change: transform;
+  }
+}
+
