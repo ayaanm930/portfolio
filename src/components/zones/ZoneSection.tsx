@@ -301,7 +301,6 @@ export function ZoneSection({
                     style={{ display: 'block', maxHeight: '320px', objectFit: 'cover' }}
                     controls
                     muted
-                    defaultMuted
                     playsInline
                     preload="metadata"
                     src="/demo-scrummate.mp4"
