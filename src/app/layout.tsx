@@ -4,9 +4,9 @@ import './globals.css'
 import { AudioProvider } from '@/components/audio/AudioProvider'
 
 export const metadata: Metadata = {
-  title: 'Ayaan Mughal — Portfolio',
-  description: 'AI Engineer & CS Graduate portfolio.',
-  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  title: 'Ayaan Mughal',
+  description: 'Ayaan Mughal - CS Graduate Portfolio.',
+  icons: [{ rel: 'icon', url: '/icon.png' }],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

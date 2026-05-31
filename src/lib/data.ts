@@ -11,7 +11,7 @@ export const personalInfo = {
   location: 'Islamabad, Pakistan',
   educationPeriod: 'Sep 2022 - Jun 2026',
   seeking: 'AI / Software Engineering Role',
-  bio: 'Final-year CS student at FAST-NUCES who has shipped real ML features in production - Whisper ASR pipelines, LLM summarization modules, and computer vision workflows at Genesys Research Lab. I build end-to-end intelligent systems: from a RAG-powered Scrum automation platform to a DQN racing agent trained from scratch. Looking for an AI/SWE role where the work actually ships.',
+  bio: 'Final-year CS student at FAST-NUCES who has shipped real ML features in production — Whisper ASR pipelines, LLM summarization modules, and computer vision workflows at TechGenesys. I build AI-powered applications: from a RAG-powered Scrum automation platform to a DQN racing agent trained from scratch. Looking for an AI/SWE role where the work actually ships.',
 }
 
 // ==================== SINGLE SOURCE OF TRUTH FOR SKILLS ====================
@@ -68,17 +68,22 @@ export const projects: Project[] = [
     type: 'Final Year Project',
     status: 'completed',
     period: 'Aug 2025 – May 2026',
-    description: 'End-to-end agentic pipeline that turns raw meeting transcripts into sprint-ready Agile artefacts — meeting minutes, prioritised user stories, and skill-matched task assignments — served via a FastAPI backend and a React meeting-transcriber frontend.',
+    description: 'AI-powered Scrum assistant that converts meeting recordings into sprint-ready deliverables - auto-generated meeting minutes, prioritised user stories, and skill-matched task assignments - with a built-in RAG interface for querying your entire project history.',
     stack: ['Python', 'FastAPI', 'Gemini', 'ChromaDB', 'RAG', 'React', 'uvicorn'],
-    pipeline: ['Chunking', 'Embedding', 'Summarisation', 'User Stories', 'Assignment', 'RAG Query'],
+    pipeline: [
+      'Transcript Ingestion',
+      'Knowledge Base Creation',
+      'Meeting Summarisation',
+      'User Story Generation',
+      'Smart Task Assignment',
+      'RAG Query Interface',
+    ],
     github: 'https://github.com/mishalali-A2/ScrumMate',
     highlights: [
-      'Five-stage agentic pipeline: semantic chunking → ChromaDB embedding → hierarchical summarisation → user story extraction → skill/workload-aware task assignment',
+      'Agentic pipeline: ingests meeting transcripts, builds a searchable knowledge base, auto-generates meeting minutes, extracts user stories, and assigns tasks by developer skill and workload',
       'RAG query interface over meeting history lets the team ask questions across all past transcripts via ChromaDB vector search',
       'Developer profiling module matches extracted stories to team members based on skills and current workload',
       'FastAPI server exposes pipeline execution, status polling, results retrieval, and RAG endpoints; React frontend triggers runs and displays output',
-      'Automated PO report generation consolidates sprint artefacts into structured deliverables',
-      '70–80% accuracy on user story generation validated against curated backlog entries, saving 2+ hours of manual Scrum overhead per sprint',
     ],
   },
   {
@@ -151,7 +156,7 @@ export const projects: Project[] = [
 export const experience: ExperienceEntry[] = [
   {
     role: 'ML / AI Intern',
-    company: 'Genesys Research Lab',
+    company: 'TechGenesys',
     period: 'Jun 2025 - Aug 2025',
     location: 'Islamabad, Pakistan',
     highlights: [
