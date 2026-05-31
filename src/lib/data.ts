@@ -11,7 +11,7 @@ export const personalInfo = {
   location: 'Islamabad, Pakistan',
   educationPeriod: 'Sep 2022 - Jun 2026',
   seeking: 'AI / Software Engineering Role',
-  bio: 'Final-year CS student at FAST-NUCES who has shipped real ML features in production — Whisper ASR pipelines, LLM summarization modules, and computer vision workflows at TechGenesys. I build AI-powered applications: from a RAG-powered Scrum automation platform to a DQN racing agent trained from scratch. Looking for an AI/SWE role where the work actually ships.',
+  bio: 'Final-year CS student at FAST-NUCES who has shipped real ML features in production - Whisper ASR pipelines, LLM summarization modules, and computer vision workflows at TechGenesys. I build AI-powered applications: from a RAG-powered Scrum automation platform to a DQN racing agent trained from scratch. Looking for an AI/SWE role where the work actually ships.',
 }
 
 // ==================== SINGLE SOURCE OF TRUTH FOR SKILLS ====================
@@ -95,7 +95,7 @@ export const projects: Project[] = [
     stack: ['Node.js', 'Express', 'React', 'MongoDB', 'Docker', 'Docker Compose', 'Jest', 'Supertest'],
     github: 'https://github.com/AyaanKhan1576/Hotel-Booking-Microservices',
     highlights: [
-      'Three decoupled services — User, Hotel, and Booking — each with its own container and MongoDB instance',
+      'Three decoupled services - User, Hotel, and Booking - each with its own container and MongoDB instance',
       'User service handles registration, authentication, loyalty program enrollment/redemption, and favorites',
       'Booking service supports individual and group bookings, cancellations, payments, and loyalty point awards',
       'Single React frontend consuming all three service APIs across user, hotel, and booking modules',

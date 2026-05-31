@@ -336,7 +336,7 @@ export function ZoneSection({
               </div>
             </div>
 
-            {/* ── OTHER LABS — scrollable panel ── */}
+            {/* ── OTHER LABS - scrollable panel ── */}
             <div className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/22 backdrop-blur-sm" style={{ minHeight: 0 }}>
               {/* Header */}
               <div className="flex items-center justify-between gap-3 px-6 pt-6 pb-3">
@@ -412,7 +412,7 @@ export function ZoneSection({
                 />
               </div>
 
-              {/* Mobile: horizontal snap scroll — one card at a time */}
+              {/* Mobile: horizontal snap scroll - one card at a time */}
               <div className="relative lg:hidden px-4 pb-6">
                 <div
                   className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3"
@@ -486,7 +486,7 @@ export function ZoneSection({
           <div className="grid gap-8 lg:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-black/24 p-6 backdrop-blur-sm md:p-8">
               <div className="text-[11px] tracking-[0.38em] text-white/70">MISSION LOG</div>
-              <div className="mt-2 text-xs tracking-[0.24em] text-white/55">Remember: open each log to unearth the mission’s hidden echoes.</div>
+              <div className="mt-2 text-xs tracking-[0.24em] text-white/55">Remember: open each log to reveal the mission's hidden echoes.</div>
               <div className="mt-4 space-y-3">
                 {content.experience.map((exp) => (
                   <details key={`${exp.company}-${exp.period}`} className="rounded-xl border border-white/10 bg-black/20 p-4">
@@ -518,7 +518,7 @@ export function ZoneSection({
 
             <div className="rounded-2xl border border-white/10 bg-black/24 p-6 backdrop-blur-sm md:p-8">
               <div className="text-[11px] tracking-[0.38em] text-white/70">ORIGIN DATA</div>
-              <div className="mt-2 text-xs tracking-[0.24em] text-white/55">Unearth the archive—expand each origin entry to reveal the deeper memory.</div>
+              <div className="mt-2 text-xs tracking-[0.24em] text-white/55">Unearth the archive - expand each origin entry to reveal the deeper memory.</div>
               <div className="mt-4 space-y-3">
                 {content.education.map((edu) => (
                   <details key={`${edu.institution}-${edu.period}`} className="rounded-xl border border-white/10 bg-black/20 p-4">
@@ -646,7 +646,7 @@ export function ZoneSection({
                 </SfxButton>
               </div>
               <div className="mt-4 text-xs text-white/55">
-                This is a mock terminal panel by design — wire it to your preferred email service later.
+                This is a mock terminal panel by design. This will be optional soon(?)
               </div>
             </div>
           </div>
