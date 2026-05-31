@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { IconChevronDown, IconChevronUp, IconMap2, IconVolume, IconVolumeOff } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { SfxButton } from '@/components/ui/SfxButton'
@@ -30,6 +31,17 @@ export function WorldHud({
             className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/35 px-2 py-2 backdrop-blur-md"
             style={active ? { boxShadow: `0 0 24px ${active.accent2}22` } : undefined}
           >
+            {/* Knight avatar motif */}
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <Image
+                src="/graphics/knight.png"
+                alt="Knight"
+                width={26}
+                height={26}
+                style={{ imageRendering: 'pixelated' }}
+                priority
+              />
+            </div>
             <SfxButton
               type="button"
               className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/85 hover:bg-white/10"
@@ -59,7 +71,16 @@ export function WorldHud({
             }
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="text-[10px] tracking-[0.38em] text-white/60">ACTIVE AREA</div>
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/graphics/knight.png"
+                  alt="Knight"
+                  width={18}
+                  height={18}
+                  style={{ imageRendering: 'pixelated', opacity: 0.7 }}
+                />
+                <div className="text-[10px] tracking-[0.38em] text-white/60">ACTIVE AREA</div>
+              </div>
               <SfxButton
                 type="button"
                 className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/80 hover:bg-white/10"

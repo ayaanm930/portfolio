@@ -10,6 +10,14 @@
     padding: 0;
     box-sizing: border-box;
   }
+
+  /* Hide real cursor on desktop (mouse) devices only */
+  @media (hover: hover) and (pointer: fine) {
+    * {
+      cursor: none !important;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 2rem;
@@ -71,16 +79,42 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 80px;
-    height: 80px;
+    width: 220px;
+    height: 220px;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 9998;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.5s ease;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.731) 0%, rgba(255,255,255,0) 70%);
-    filter: blur(8px);
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(220, 210, 255, 0.12) 30%,
+      rgba(180, 200, 255, 0.06) 55%,
+      rgba(255, 255, 255, 0) 70%
+    );
+    filter: blur(28px);
     will-change: transform;
+  }
+
+  .cursor-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 38px;
+    height: 38px;
+    pointer-events: none;
+    z-index: 99999;
+    will-change: transform;
+    user-select: none;
+    /* Only show on desktop (hover+fine pointer) */
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cursor-img {
+      display: block;
+    }
   }
 }
 
