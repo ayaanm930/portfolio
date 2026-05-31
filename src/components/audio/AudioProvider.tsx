@@ -61,7 +61,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     const ambient = new Howl({
       src: ['/audio/ambient.mp3'],
       loop: true,
-      volume: 0.05,
+      volume: 0.0099,
       html5: true,
       onloaderror: () => {
         // If no file exists, fail silently (site still works).
@@ -70,19 +70,19 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
     const click = new Howl({
       src: ['/audio/click.mp3'],
-      volume: 0.35,
+      volume: 0.1,
       html5: true,
       onloaderror: () => { },
     })
     const gate = new Howl({
       src: ['/audio/gate.mp3'],
-      volume: 0.5,
+      volume: 0.1,
       html5: true,
       onloaderror: () => { },
     })
     const map = new Howl({
       src: ['/audio/map.mp3'],
-      volume: 1.0,
+      volume: 0.1,
       html5: true,
       onloaderror: () => { },
     })

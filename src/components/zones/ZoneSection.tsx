@@ -301,17 +301,28 @@ export function ZoneSection({
                     style={{ display: 'block', maxHeight: '320px', objectFit: 'cover' }}
                     controls
                     muted
+                    defaultMuted
                     playsInline
                     preload="metadata"
                     src="/demo-scrummate.mp4"
+                    ref={(el) => {
+                      if (el) {
+                        el.muted = true
+                        el.volume = 0
+                        // Re-enforce mute if user somehow triggers volumechange
+                        el.addEventListener('volumechange', () => {
+                          el.muted = true
+                          el.volume = 0
+                        })
+                      }
+                    }}
                     onError={(e) => {
-                      // Hide broken video and show placeholder instead
-                      ;(e.currentTarget as HTMLVideoElement).style.display = 'none'
+                      ; (e.currentTarget as HTMLVideoElement).style.display = 'none'
                       const ph = e.currentTarget.nextElementSibling as HTMLElement | null
                       if (ph) ph.style.display = 'flex'
                     }}
                   />
-                  {/* Placeholder shown when video file is missing */}
+                  { }
                   <div
                     className="hidden w-full flex-col items-center justify-center gap-3 py-16 text-white/30"
                     style={{ minHeight: '180px' }}
@@ -320,7 +331,6 @@ export function ZoneSection({
                       <polygon points="5 3 19 12 5 21 5 3" />
                     </svg>
                     <div className="text-[11px] tracking-[0.32em] text-white/35">
-                      DROP demo-scrummate.mp4 INTO /public
                     </div>
                   </div>
                 </div>

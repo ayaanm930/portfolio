@@ -73,8 +73,8 @@ export function WorldHud({
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Image
-                  src="/graphics/flea.png"
-                  alt="flea"
+                  src="/graphics/knight.png"
+                  alt="knight"
                   width={18}
                   height={18}
                   style={{ imageRendering: 'pixelated', opacity: 0.7 }}
