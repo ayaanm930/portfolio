@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { IconArrowDown, IconBook2, IconBrandGithub, IconBrandLinkedin, IconDownload, IconExternalLink, IconFlask2, IconMail, IconPhone } from '@tabler/icons-react'
 import type { EducationEntry, ExperienceEntry, Project } from '@/lib/data'
-import { currentlyBuilding } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { useAudio } from '@/components/audio/AudioProvider'
 import { SfxButton } from '@/components/ui/SfxButton'
@@ -139,14 +138,14 @@ export function ZoneSection({
 
   return (
     <section
-  id={`zone-${zone.id}`}
-  data-zone-id={zone.id}
-  data-zone-name={zone.name}
-  data-zone-accent={zone.accent1}
-  data-zone={zone.id}          // ← add this for the bg canvas observer
-  className="zone-container"
-  style={{ color: zone.text }} // ← no backgroundColor
->
+      id={`zone-${zone.id}`}
+      data-zone-id={zone.id}
+      data-zone-name={zone.name}
+      data-zone-accent={zone.accent1}
+      data-zone={zone.id}          // ← add this for the bg canvas observer
+      className="zone-container"
+      style={{ color: zone.text }} // ← no backgroundColor
+    >
       <ZoneCanvas zone={zone} active={active} />
       <div className="zone-content">
         <div className="mb-8 flex flex-col gap-2">
@@ -668,26 +667,6 @@ export function ZoneSection({
 
         {zone.id === 'signal' && (
           <div className="grid gap-10">
-
-            {/* ── Currently Building ── */}
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm">
-              <div className="text-[11px] tracking-[0.38em] text-white/70">CURRENTLY BUILDING</div>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {currentlyBuilding.map((item) => (
-                  <div
-                    key={item.label}
-                    className="rounded-xl border border-white/10 bg-black/25 px-4 py-3"
-                    style={{ boxShadow: `0 0 20px ${zone.accent1}08` }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: zone.accent1 }} />
-                      <div className="text-xs font-medium tracking-[0.1em] text-white/85">{item.label}</div>
-                    </div>
-                    <div className="mt-1.5 text-[11px] leading-relaxed text-white/50">{item.detail}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm md:p-8">
               <div className="flex items-center justify-between gap-4">

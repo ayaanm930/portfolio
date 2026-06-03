@@ -258,6 +258,3 @@ export const education: EducationEntry[] = [
 export const courseworkHighlights = education.flatMap((e) => e.courses)
 
 // ==================== CURRENTLY BUILDING ====================
-export const currentlyBuilding = [
-
-]
