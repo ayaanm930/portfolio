@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { IconArrowDown, IconBook2, IconBrandGithub, IconBrandLinkedin, IconFlask2, IconMail, IconPhone } from '@tabler/icons-react'
+import { IconArrowDown, IconBook2, IconBrandGithub, IconBrandLinkedin, IconDownload, IconExternalLink, IconFlask2, IconMail, IconPhone } from '@tabler/icons-react'
 import type { EducationEntry, ExperienceEntry, Project } from '@/lib/data'
+import { currentlyBuilding } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { useAudio } from '@/components/audio/AudioProvider'
 import { SfxButton } from '@/components/ui/SfxButton'
@@ -20,35 +21,89 @@ type Content = {
     resumeUrl: string
     bio: string
   }
-  skills: {
-    intelligence: readonly string[]
-    language: readonly string[]
-    systems: readonly string[]
-    interfaces: readonly string[]
-  }
   technicalSkills: Record<string, readonly string[]>
   projects: Project[]
   experience: ExperienceEntry[]
   education: EducationEntry[]
 }
 
+const SCRUMMATE_DIAGRAM = `
+.                   ┌─────────────────────┐
+                    │     Team Users      │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    ScrumMate UI     │
+                    │  Project Dashboard  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Agentic Project     │
+                    │      Manager        │
+                    └──────────┬──────────┘
+                               │
+         ┌─────────────────────┼─────────────────────┐
+         │                     │                     │
+         ▼                     ▼                     ▼
+ ┌───────────────┐   ┌────────────────┐   ┌────────────────┐
+ │ Project Mgmt  │   │ Meeting Agent  │   │ Metrics Engine │
+ │ - Create      │   │ - Host Meeting │   │ - Velocity     │
+ │ - Update      │   │ - Record Audio │   │ - Progress     │
+ │ - Track       │   │ - Generate MoM │   │ - Analytics    │
+ └───────┬───────┘   └───────┬────────┘   └───────┬────────┘
+         │                   │                    │
+         │                   ▼                    │
+         │         ┌──────────────────┐           │
+         │         │   AI Processing  │           │
+         │         │ - Summarization  │           │
+         │         │ - User Stories   │           │
+         │         └────────┬─────────┘           │
+         │                  │                     │
+         └──────────────────┼─────────────────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │      n8n Hub        │
+                 │  Workflow Engine    │
+                 └──────────┬──────────┘
+                            │
+            ┌───────────────┼────────────────┐
+            │               │                │
+            ▼               ▼                ▼
+ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+ │ Trello Create  │ │ Trello Update  │ │ Database Sync  │
+ │ Boards         │ │ Cards/Stories  │ │ Projects/Data  │
+ └────────────────┘ └────────────────┘ └────────────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │   Trello Board      │
+                 │  Sprint Backlog     │
+                 │  User Stories       │
+                 │  Tasks & Progress   │
+                 └─────────────────────┘
+`.trim()
+
+const MEETING_MASTER_DIAGRAM = `
+ 
+`.trim()
+
 export function ZoneSection({
   zone,
   activeZoneId,
   content,
-  previousZoneBackground,
-  nextZoneBackground,
 }: {
   zone: ZoneConfig
   activeZoneId: ZoneId
   content: Content
-  previousZoneBackground?: string
-  nextZoneBackground?: string
 }) {
   const active = activeZoneId === zone.id
   const audio = useAudio()
   const [resumeOpen, setResumeOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [archExpanded, setArchExpanded] = useState(false)
 
   useEffect(() => {
     if (!selectedProject) return
@@ -66,39 +121,33 @@ export function ZoneSection({
     }
   }, [selectedProject, audio])
 
+  useEffect(() => {
+    const overlayOpen = resumeOpen || Boolean(selectedProject)
+    const previousBodyOverflow = document.body.style.overflow
+    const previousHtmlOverflow = document.documentElement.style.overflow
+
+    if (overlayOpen) {
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousHtmlOverflow
+    }
+  }, [resumeOpen, selectedProject])
+
   return (
     <section
-      id={`zone-${zone.id}`}
-      data-zone-id={zone.id}
-      data-zone-name={zone.name}
-      data-zone-accent={zone.accent1}
-      className="zone-container"
-      style={{ backgroundColor: zone.background, color: zone.text }}
-    >
+  id={`zone-${zone.id}`}
+  data-zone-id={zone.id}
+  data-zone-name={zone.name}
+  data-zone-accent={zone.accent1}
+  data-zone={zone.id}          // ← add this for the bg canvas observer
+  className="zone-container"
+  style={{ color: zone.text }} // ← no backgroundColor
+>
       <ZoneCanvas zone={zone} active={active} />
-      {previousZoneBackground && (
-        <div
-          className="pointer-events-none absolute left-0 right-0 top-0 z-[2] h-36 md:h-44 blur-xl"
-          style={{
-            background: `linear-gradient(180deg, ${previousZoneBackground}dd 0%, ${zone.background}00 100%)`,
-          }}
-        />
-      )}
-      {nextZoneBackground && (
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 z-[2] h-36 md:h-44 blur-xl"
-          style={{
-            background: `linear-gradient(180deg, ${zone.background}00 0%, ${nextZoneBackground}dd 100%)`,
-          }}
-        />
-      )}
-      <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background: `linear-gradient(180deg, ${zone.accent2}0f 0%, transparent 20%, transparent 80%, ${zone.accent1}0f 100%)`,
-        }}
-      />
-
       <div className="zone-content">
         <div className="mb-8 flex flex-col gap-2">
           <div className="text-[11px] tracking-[0.42em] opacity-70">
@@ -119,11 +168,16 @@ export function ZoneSection({
               >
                 {content.personalInfo.name.toUpperCase()}
               </h1>
-              <div className="mt-3 text-base tracking-[0.12em] opacity-90 md:text-lg">{content.personalInfo.title}</div>
+              <div className="mt-3 text-base tracking-[0.12em] opacity-90 md:text-lg">
+                AI Engineer &amp; Full-Stack Developer Building Real-Time Intelligent Systems
+              </div>
 
-              <p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/75 md:text-base">{content.personalInfo.bio}</p>
+              <p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/75 md:text-base">
+                CS graduate who has shipped production ML features — Whisper ASR pipelines, LLM summarization modules, and computer vision workflows at TechGenesys.
+                I build AI-powered applications: from a RAG-powered Scrum automation platform to an LSTM racing agent trained from scratch.
+              </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <SfxButton
                   type="button"
                   className={cn(
@@ -133,26 +187,25 @@ export function ZoneSection({
                   onClick={() => document.getElementById('zone-labs')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                 >
                   <IconFlask2 size={18} />
-                  EXPLORE LABS
+                  VIEW PROJECTS
                 </SfxButton>
-                <SfxButton
-                  type="button"
-                  className={cn(
-                    'inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm tracking-[0.16em]',
-                    'bg-black/20 hover:bg-black/30 border-white/10 text-white/85'
-                  )}
-                  onClick={() => document.getElementById('zone-logs')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                <a
+                  href={content.personalInfo.resumeUrl}
+                  download
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/85 hover:bg-black/30"
                 >
-                  <IconBook2 size={18} />
-                  VIEW LOGS
-                </SfxButton>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/80 hover:bg-black/30"
-                  onClick={() => setResumeOpen(true)}
+                  <IconDownload size={18} />
+                  DOWNLOAD RESUME
+                </a>
+                <a
+                  href={content.personalInfo.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/80 hover:bg-black/30"
                 >
-                  RESUME
-                </button>
+                  <IconBrandGithub size={18} />
+                  GITHUB
+                </a>
               </div>
             </div>
 
@@ -169,30 +222,31 @@ export function ZoneSection({
         )}
 
         {zone.id === 'core' && (
-          <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
             <div className="rounded-2xl border border-white/10 bg-black/25 p-6 backdrop-blur-sm">
               <div className="text-[11px] tracking-[0.38em] text-white/70">ABOUT</div>
               <h2 className="mt-3 text-2xl tracking-[0.16em]" style={{ color: zone.accent1 }}>
-                ABILITY CLUSTERS
+                DEVELOPER PROFILE
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-white/70">
-                Architected systems across speech, vision, and language. I build end-to-end ML pipelines, ship production-integrated features, and keep
-                interfaces recruiter-readable without losing depth.
+                {content.personalInfo.bio}
               </p>
               <div className="mt-5 text-xs text-white/65">{zone.particleDescription}</div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <AbilityCard title="INTELLIGENCE" items={content.skills.intelligence} accent={zone.accent1} />
-              <AbilityCard title="LANGUAGE" items={content.skills.language} accent={zone.accent2} />
-              <AbilityCard title="SYSTEMS" items={content.skills.systems} accent={zone.accent1} />
-              <AbilityCard title="INTERFACES" items={content.skills.interfaces} accent={zone.accent2} />
-            </div>
-            <div className="mt-2 rounded-2xl border border-white/10 bg-black/20 p-5 backdrop-blur-sm md:col-span-2">
-              <div className="text-[11px] tracking-[0.38em] text-white/70">FULL SKILL ARCHIVE</div>
-              <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                {Object.entries(content.technicalSkills).map(([group, items]) => (
-                  <AbilityCard key={group} title={group.toUpperCase()} items={items} accent={zone.accent1} />
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm md:p-8">
+              <div className="text-[11px] tracking-[0.38em] text-white/70">TECHNICAL SKILLS</div>
+              <h2 className="mt-3 text-2xl tracking-[0.16em] mb-6" style={{ color: zone.accent1 }}>
+                ABILITY CLUSTERS
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {Object.entries(content.technicalSkills).map(([group, items], idx) => (
+                  <AbilityCard
+                    key={group}
+                    title={group.toUpperCase()}
+                    items={items}
+                    accent={idx % 2 === 0 ? zone.accent1 : zone.accent2}
+                  />
                 ))}
               </div>
             </div>
@@ -236,6 +290,30 @@ export function ZoneSection({
                 {content.projects[0]?.description}
               </p>
 
+              {/* Case-study: Problem / Solution / Impact */}
+              {(content.projects[0]?.problem || content.projects[0]?.solution || content.projects[0]?.impact) && (
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  {content.projects[0]?.problem && (
+                    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs">
+                      <div className="text-[10px] tracking-[0.3em] text-white/45 mb-1">PROBLEM</div>
+                      <div className="text-white/75 leading-relaxed">{content.projects[0].problem}</div>
+                    </div>
+                  )}
+                  {content.projects[0]?.solution && (
+                    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs" style={{ boxShadow: `0 0 20px ${zone.accent1}0a` }}>
+                      <div className="text-[10px] tracking-[0.3em] text-white/45 mb-1">SOLUTION</div>
+                      <div className="text-white/75 leading-relaxed">{content.projects[0].solution}</div>
+                    </div>
+                  )}
+                  {content.projects[0]?.impact && (
+                    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs" style={{ boxShadow: `0 0 20px ${zone.accent2}0a` }}>
+                      <div className="text-[10px] tracking-[0.3em] text-white/45 mb-1">IMPACT</div>
+                      <div className="leading-relaxed" style={{ color: zone.accent1 }}>{content.projects[0].impact}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="mt-5 flex flex-wrap gap-2">
                 {content.projects[0]?.stack?.map((t) => (
                   <span
@@ -266,6 +344,28 @@ export function ZoneSection({
                 </div>
               </div>
 
+              {/* Architecture diagram (expandable) */}
+              <div className="mt-5">
+                <button
+                  type="button"
+                  className="flex items-center gap-2 text-[11px] tracking-[0.28em] text-white/50 hover:text-white/80 transition-colors"
+                  onClick={(e) => { e.stopPropagation(); setArchExpanded((v) => !v) }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: archExpanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                  ARCHITECTURE DIAGRAM
+                </button>
+                {archExpanded && (
+                  <pre
+                    className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-black/40 px-4 py-4 text-[11px] leading-relaxed text-white/65 font-mono"
+                    style={{ boxShadow: `0 0 30px ${zone.accent1}08` }}
+                  >
+                    {SCRUMMATE_DIAGRAM}
+                  </pre>
+                )}
+              </div>
+
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <SfxButton
                   type="button"
@@ -279,12 +379,13 @@ export function ZoneSection({
                   VIEW DETAILS & HIGHLIGHTS
                 </SfxButton>
                 <a
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/90 hover:bg-black/30"
+                  className="inline-flex items-center gap-2 justify-center rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/90 hover:bg-black/30"
                   href={content.projects[0]?.github ?? '#'}
                   target="_blank"
                   rel="noreferrer"
                   onClick={(e) => e.stopPropagation()}
                 >
+                  <IconBrandGithub size={16} />
                   VIEW GITHUB
                 </a>
               </div>
@@ -379,6 +480,11 @@ export function ZoneSection({
                           </div>
                         </div>
                         <div className="mt-2 text-xs leading-relaxed text-white/70">{p.description}</div>
+                        {p.impact && (
+                          <div className="mt-2 rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 text-[11px] leading-relaxed" style={{ color: zone.accent2 }}>
+                            <span className="text-white/35 mr-1">▸</span>{p.impact}
+                          </div>
+                        )}
                         <div className="mt-3 flex flex-wrap gap-2">
                           {p.stack.slice(0, 5).map((t) => (
                             <span key={t} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/75">
@@ -440,6 +546,11 @@ export function ZoneSection({
                         </div>
                       </div>
                       <div className="mt-2 text-xs leading-relaxed text-white/70">{p.description}</div>
+                      {p.impact && (
+                        <div className="mt-2 rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 text-[11px] leading-relaxed" style={{ color: zone.accent2 }}>
+                          <span className="text-white/35 mr-1">▸</span>{p.impact}
+                        </div>
+                      )}
                       <div className="mt-3 flex flex-wrap gap-2">
                         {p.stack.slice(0, 5).map((t) => (
                           <span key={t} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/75">
@@ -556,98 +667,104 @@ export function ZoneSection({
         )}
 
         {zone.id === 'signal' && (
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid gap-10">
+
+            {/* ── Currently Building ── */}
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm">
+              <div className="text-[11px] tracking-[0.38em] text-white/70">CURRENTLY BUILDING</div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {currentlyBuilding.map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+                    style={{ boxShadow: `0 0 20px ${zone.accent1}08` }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: zone.accent1 }} />
+                      <div className="text-xs font-medium tracking-[0.1em] text-white/85">{item.label}</div>
+                    </div>
+                    <div className="mt-1.5 text-[11px] leading-relaxed text-white/50">{item.detail}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm md:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <div className="text-[11px] tracking-[0.38em] text-white/70">CONTACT</div>
                   <h2 className="mt-3 text-2xl tracking-[0.16em]" style={{ color: zone.accent1 }}>
-                    THE SIGNAL
+                    OPEN TO OPPORTUNITIES
                   </h2>
+                  <p className="mt-2 text-xs leading-relaxed text-white/60 max-w-xl">
+                    Looking for opportunities in AI engineering, backend development, and full-stack systems.
+                  </p>
                 </div>
-                <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] tracking-[0.28em] text-white/85">
-                  <span className="mr-2 inline-block h-2 w-2 rounded-full align-middle" style={{ backgroundColor: zone.accent1 }} />
-                  OPEN TO OPPORTUNITIES
+                <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] tracking-[0.28em] text-white/85 shrink-0">
+                  <span className="mr-2 inline-block h-2 w-2 rounded-full align-middle animate-pulse" style={{ backgroundColor: zone.accent1 }} />
+                  AVAILABLE
                 </div>
               </div>
 
               <div className="mt-6 space-y-4">
-                {/* Icon buttons for Email, GitHub, LinkedIn */}
-                <div className="flex items-center gap-3">
+                {/* Icon buttons for Email, GitHub, LinkedIn, Resume */}
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   <a
                     href={`mailto:${content.personalInfo.email}`}
                     aria-label="Send email"
-                    className="group flex items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent1}10` }}
                   >
                     <IconMail size={18} style={{ color: zone.accent1 }} />
-                    <span className="text-[11px] tracking-[0.3em] text-white/65">EMAIL</span>
+                    <span className="truncate text-[11px] tracking-[0.3em] text-white/65">EMAIL</span>
                   </a>
                   <a
                     href={content.personalInfo.github}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="GitHub profile"
-                    className="group flex items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent1}10` }}
                   >
                     <IconBrandGithub size={18} style={{ color: zone.accent1 }} />
-                    <span className="text-[11px] tracking-[0.3em] text-white/65">GITHUB</span>
+                    <span className="truncate text-[11px] tracking-[0.3em] text-white/65">GITHUB</span>
                   </a>
                   <a
                     href={content.personalInfo.linkedin}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="LinkedIn profile"
-                    className="group flex items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent1}10` }}
                   >
                     <IconBrandLinkedin size={18} style={{ color: zone.accent1 }} />
-                    <span className="text-[11px] tracking-[0.3em] text-white/65">LINKEDIN</span>
+                    <span className="truncate text-[11px] tracking-[0.3em] text-white/65">LINKEDIN</span>
+                  </a>
+                  <a
+                    href={content.personalInfo.resumeUrl}
+                    download
+                    aria-label="Download resume"
+                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    style={{ boxShadow: `0 0 20px ${zone.accent2}10` }}
+                  >
+                    <IconDownload size={18} style={{ color: zone.accent2 }} />
+                    <span className="truncate text-[11px] tracking-[0.3em] text-white/65">RESUME</span>
                   </a>
                 </div>
                 {/* Phone as a text row */}
                 <a
                   href={`tel:${content.personalInfo.phone.replace(/\s+/g, '')}`}
-                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 hover:bg-black/30 transition-colors"
+                  className="flex flex-col gap-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 hover:bg-black/30 transition-colors sm:flex-row sm:items-center"
                 >
-                  <IconPhone size={15} style={{ color: zone.accent1 }} />
-                  <span className="text-[11px] tracking-[0.38em] text-white/60">PHONE</span>
-                  <span className="ml-auto text-sm text-white/75">{content.personalInfo.phone}</span>
+                  <div className="flex items-center gap-3">
+                    <IconPhone size={15} style={{ color: zone.accent1 }} />
+                    <span className="text-[11px] tracking-[0.38em] text-white/60">PHONE</span>
+                  </div>
+                  <span className="text-sm text-white/75 sm:ml-auto">{content.personalInfo.phone}</span>
                 </a>
               </div>
 
               <div className="mt-6 text-xs text-white/55">{zone.particleDescription}</div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm md:p-8">
-              <div className="text-[11px] tracking-[0.38em] text-white/70">SEND TRANSMISSION</div>
-              <div className="mt-4 grid gap-3">
-                <input
-                  className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white/85 outline-none placeholder:text-white/35 focus:border-white/20"
-                  placeholder="Name"
-                />
-                <input
-                  className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white/85 outline-none placeholder:text-white/35 focus:border-white/20"
-                  placeholder="Email"
-                />
-                <textarea
-                  className="min-h-[150px] w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white/85 outline-none placeholder:text-white/35 focus:border-white/20"
-                  placeholder="Message"
-                />
-                <SfxButton
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm tracking-[0.16em] text-white/90 hover:bg-white/10"
-                  onClick={() => {
-                    // Mock form area as requested — no submit side effects.
-                  }}
-                >
-                  SEND
-                </SfxButton>
-              </div>
-              <div className="mt-4 text-xs text-white/55">
-                This is a mock terminal panel by design. This will be optional soon(?)
-              </div>
             </div>
           </div>
         )}
@@ -660,15 +777,28 @@ export function ZoneSection({
 
       {resumeOpen && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 p-4 backdrop-blur-2xl">
-          <div className="relative w-full max-w-6xl overflow-hidden rounded-3xl border border-white/10 bg-[#02050c]/95 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div
+            className="relative w-full max-w-6xl overflow-hidden rounded-3xl border bg-black/90 shadow-2xl"
+            style={{
+              borderColor: `${zone.accent1}40`,
+              boxShadow: `0 0 80px ${zone.accent1}22`,
+              background: `linear-gradient(180deg, ${zone.background}dd 0%, ${zone.surface}dd 100%)`,
+            }}
+          >
+            <div className="flex flex-col gap-3 border-b border-white/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="text-[10px] tracking-[0.38em] text-white/60">RESUME VIEWER</div>
-                <div className="mt-1 text-lg font-medium text-white">{content.personalInfo.name}'s Resume</div>
+                <div className="mt-1 text-lg font-medium" style={{ color: zone.accent1 }}>
+                  {content.personalInfo.name}'s Resume
+                </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <a
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/85 hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-2xl border px-4 py-2 text-xs text-white/90 transition-colors"
+                  style={{
+                    borderColor: `${zone.accent1}55`,
+                    backgroundColor: `${zone.accent1}15`,
+                  }}
                   href={content.personalInfo.resumeUrl}
                   download
                 >
@@ -683,7 +813,7 @@ export function ZoneSection({
                 </button>
               </div>
             </div>
-            <div className="h-[70vh] bg-black">
+            <div className="h-[70vh] bg-black/80">
               <iframe
                 className="h-full w-full border-none bg-black"
                 src={content.personalInfo.resumeUrl}
@@ -762,6 +892,70 @@ export function ZoneSection({
                   {selectedProject.description}
                 </p>
               </div>
+
+              {/* Case Study: Problem / Solution / Impact */}
+              {(selectedProject.problem || selectedProject.solution || selectedProject.impact) && (
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {selectedProject.problem && (
+                    <div className="rounded-xl border border-white/8 bg-black/35 px-4 py-3">
+                      <h4 className="text-[10px] tracking-[0.3em] text-white/40 uppercase mb-1.5">Problem</h4>
+                      <p className="text-xs leading-relaxed text-white/70">{selectedProject.problem}</p>
+                    </div>
+                  )}
+                  {selectedProject.solution && (
+                    <div className="rounded-xl border border-white/8 bg-black/35 px-4 py-3" style={{ boxShadow: `0 0 16px ${zone.accent1}08` }}>
+                      <h4 className="text-[10px] tracking-[0.3em] text-white/40 uppercase mb-1.5">Solution</h4>
+                      <p className="text-xs leading-relaxed text-white/70">{selectedProject.solution}</p>
+                    </div>
+                  )}
+                  {selectedProject.impact && (
+                    <div className="rounded-xl border border-white/8 bg-black/35 px-4 py-3" style={{ boxShadow: `0 0 16px ${zone.accent2}08` }}>
+                      <h4 className="text-[10px] tracking-[0.3em] text-white/40 uppercase mb-1.5">Impact</h4>
+                      <p className="text-xs leading-relaxed" style={{ color: zone.accent1 }}>{selectedProject.impact}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Challenges */}
+              {selectedProject.challenges && selectedProject.challenges.length > 0 && (
+                <div>
+                  <h4 className="text-[10px] tracking-[0.3em] text-white/50 uppercase mb-3">Challenges Solved</h4>
+                  <ul className="space-y-2">
+                    {selectedProject.challenges.map((c, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-white/75 leading-relaxed">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: i % 2 === 0 ? zone.accent1 : zone.accent2 }} />
+                        <span>{c}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Architecture Diagram (ScrumMate only) */}
+              {selectedProject.title.toLowerCase().includes('scrum') && (
+                <div>
+                  <h4 className="text-[10px] tracking-[0.3em] text-white/50 uppercase mb-3">Architecture</h4>
+                  <pre
+                    className="overflow-x-auto rounded-xl border border-white/10 bg-black/50 px-4 py-4 text-[11px] leading-relaxed text-white/60 font-mono"
+                    style={{ boxShadow: `0 0 24px ${zone.accent1}08` }}
+                  >
+                    {SCRUMMATE_DIAGRAM}
+                  </pre>
+                </div>
+              )}
+
+              {/* Architecture Diagram (TechGenesys / Meeting Master) */}
+              {selectedProject.title.toLowerCase().includes('hotel') && false && (
+                <div>
+                  <h4 className="text-[10px] tracking-[0.3em] text-white/50 uppercase mb-3">System Diagram</h4>
+                  <pre
+                    className="overflow-x-auto rounded-xl border border-white/10 bg-black/50 px-4 py-4 text-[11px] leading-relaxed text-white/60 font-mono"
+                  >
+                    {MEETING_MASTER_DIAGRAM}
+                  </pre>
+                </div>
+              )}
 
               {/* Pipeline */}
               {selectedProject.pipeline && selectedProject.pipeline.length > 0 && (

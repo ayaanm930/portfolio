@@ -5,6 +5,8 @@ export type ZoneConfig = {
   name: string
   biomeRef: string
   background: string
+  surface: string
+  mid: string
   accent1: string
   accent2: string
   text: string

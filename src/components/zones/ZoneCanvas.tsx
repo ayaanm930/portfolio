@@ -42,6 +42,24 @@ function rgba(hex: string, a: number) {
   return `rgba(${r},${g},${b},${a})`
 }
 
+function toHex(value: number) {
+  const hex = Math.max(0, Math.min(255, Math.floor(value))).toString(16)
+  return hex.length === 1 ? `0${hex}` : hex
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
+}
+
+function darken(hex: string, amount: number) {
+  const { r, g, b } = hexToRgb(hex)
+  return rgbToHex(
+    Math.floor(r * (1 - amount)),
+    Math.floor(g * (1 - amount)),
+    Math.floor(b * (1 - amount))
+  )
+}
+
 function dprScale(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
   const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
   const rect = canvas.getBoundingClientRect()
@@ -190,6 +208,76 @@ function drawZoneMood(ctx: CanvasRenderingContext2D, w: number, h: number, zone:
 
 // ---------------- Silhouettes (3 depth layers) ----------------
 
+// Abyss: tall stone pillars with crumbled tops + uneven ground mounds
+function drawAbyssPillars(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
+  ctx.save()
+  const alpha = 0.22 + depth * 0.22
+  ctx.fillStyle = rgba(color, alpha)
+  const baseY = h + parallax * (0.15 + depth * 0.2)
+  const count = Math.floor(4 + depth * 3)
+  const seed0 = depth * 77.3
+
+  for (let i = 0; i < count; i++) {
+    const s = rand(seed0 + i * 13.1)
+    const x = (i / (count - 1)) * w * 1.1 - w * 0.05 + (rand(seed0 + i * 7.7) - 0.5) * w * 0.08
+    const pw = lerp(w * 0.04, w * 0.09, rand(seed0 + i * 3.3)) * (0.6 + depth * 0.6)
+    const ph = lerp(h * 0.35, h * (0.62 + depth * 0.1), s)
+    const topY = baseY - ph
+
+    // Pillar shaft
+    ctx.beginPath()
+    ctx.rect(x - pw / 2, topY, pw, ph)
+    ctx.fill()
+
+    // Crumbled top: jagged chunk cuts
+    ctx.save()
+    ctx.fillStyle = rgba(color, alpha * 0.6)
+    for (let j = 0; j < 3; j++) {
+      const cx = x - pw / 2 + rand(seed0 + i * 5.5 + j) * pw
+      const cw = rand(seed0 + i * 6.6 + j) * pw * 0.55 + pw * 0.1
+      const ch = rand(seed0 + i * 8.8 + j) * ph * 0.09 + ph * 0.02
+      ctx.beginPath()
+      ctx.rect(cx, topY - ch * 0.5, cw, ch * 1.5)
+      ctx.fill()
+    }
+    ctx.restore()
+
+    // Thin capital ring near top
+    ctx.save()
+    ctx.fillStyle = rgba(color, alpha * 1.3)
+    ctx.beginPath()
+    ctx.rect(x - pw / 2 - pw * 0.15, topY + ph * 0.04, pw * 1.3, ph * 0.03)
+    ctx.fill()
+    ctx.restore()
+  }
+  ctx.restore()
+}
+
+function drawAbyssMounds(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
+  ctx.save()
+  const alpha = 0.28 + depth * 0.25
+  ctx.fillStyle = rgba(color, alpha)
+  const baseY = h * (0.88 - depth * 0.04) + parallax * (0.1 + depth * 0.15)
+  const steps = 32
+
+  ctx.beginPath()
+  ctx.moveTo(0, baseY)
+  for (let i = 0; i <= steps; i++) {
+    const x = (i / steps) * w
+    const s1 = Math.sin(i * 0.8 + depth * 4.1) * 0.5 + 0.5
+    const s2 = Math.sin(i * 2.2 + depth * 1.7) * 0.5 + 0.5
+    const bump = lerp(h * 0.04, h * (0.14 + depth * 0.08), s1 * 0.7 + s2 * 0.3)
+    ctx.lineTo(x, baseY - bump)
+  }
+  ctx.lineTo(w, baseY)
+  ctx.lineTo(w, h)
+  ctx.lineTo(0, h)
+  ctx.closePath()
+  ctx.fill()
+  ctx.restore()
+}
+
+// Kept for labs stalactites (small spikes from top)
 function drawStalactites(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
   const top = -h * 0.02 + parallax * depth
   ctx.save()
@@ -210,95 +298,223 @@ function drawStalactites(ctx: CanvasRenderingContext2D, w: number, h: number, co
   ctx.restore()
 }
 
-function drawPillars(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, parallax: number) {
+function drawCityBuildings(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
   ctx.save()
-  ctx.fillStyle = rgba(color, 0.35)
-  const baseY = h * 0.25 + parallax * 0.35
-  const pillarW = Math.max(26, w * 0.07)
-  const gap = w * 0.07
-  for (let i = 0; i < 4; i++) {
-    const x = i === 0 ? -pillarW * 0.3 : w - pillarW * 0.7
-    const y = baseY + i * 6
-    const height = h * (0.72 - i * 0.05)
+  const alpha = 0.14 + depth * 0.18
+  const baseY = h + parallax * (0.15 + depth * 0.22)
+  const seed0 = depth * 53.9
+  const count = Math.floor(6 + depth * 4)
+
+  for (let i = 0; i < count; i++) {
+    const s = rand(seed0 + i * 11.3)
+    const x = (i / count) * w + (rand(seed0 + i * 4.4) - 0.5) * w * 0.06
+    const bw = lerp(w * 0.06, w * 0.14, rand(seed0 + i * 6.1)) * (0.5 + depth * 0.7)
+    const bh = lerp(h * 0.28, h * (0.58 + depth * 0.08), s)
+    const topY = baseY - bh
+
+    // Main building block
+    ctx.fillStyle = rgba(color, alpha)
     ctx.beginPath()
-    ctx.roundRect(x, y, pillarW, height, 14)
+    ctx.rect(x - bw / 2, topY, bw, bh)
     ctx.fill()
-    ctx.fillStyle = rgba(color, 0.18)
+
+    // Gothic window slits
+    ctx.fillStyle = rgba(color, alpha * 0.35)
+    const winRows = Math.floor(2 + depth)
+    const winH = bh * 0.1
+    const winW = bw * 0.12
+    for (let row = 0; row < winRows; row++) {
+      const wy = topY + bh * (0.12 + row * 0.28)
+      for (let col = 0; col < 2; col++) {
+        const wx = x - bw * 0.22 + col * bw * 0.44 - winW / 2
+        ctx.beginPath()
+        ctx.moveTo(wx, wy + winH)
+        ctx.lineTo(wx, wy + winH * 0.35)
+        ctx.quadraticCurveTo(wx + winW / 2, wy, wx + winW, wy + winH * 0.35)
+        ctx.lineTo(wx + winW, wy + winH)
+        ctx.closePath()
+        ctx.fill()
+      }
+    }
+
+    // Pointed spire on top of building
+    const spireW = bw * (0.25 + rand(seed0 + i * 9.1) * 0.2)
+    const spireH = bh * (0.2 + rand(seed0 + i * 8.2) * 0.25)
+    ctx.fillStyle = rgba(color, alpha * 1.1)
+    ctx.beginPath()
+    ctx.moveTo(x, topY - spireH)
+    ctx.lineTo(x - spireW / 2, topY)
+    ctx.lineTo(x + spireW / 2, topY)
+    ctx.closePath()
+    ctx.fill()
+
+    // Side turrets on larger buildings
+    if (bw > w * 0.09) {
+      for (let side = -1; side <= 1; side += 2) {
+        const tx = x + side * bw * 0.42
+        const tw = bw * 0.22
+        const th = bh * 0.4
+        ctx.fillStyle = rgba(color, alpha * 0.8)
+        ctx.beginPath()
+        ctx.rect(tx - tw / 2, topY + bh * 0.22, tw, th)
+        ctx.fill()
+        ctx.beginPath()
+        ctx.moveTo(tx, topY + bh * 0.22 - tw * 0.8)
+        ctx.lineTo(tx - tw / 2, topY + bh * 0.22)
+        ctx.lineTo(tx + tw / 2, topY + bh * 0.22)
+        ctx.closePath()
+        ctx.fill()
+      }
+    }
   }
   ctx.restore()
 }
 
-function drawGothicArches(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
+function drawCrystalSpikes(ctx: CanvasRenderingContext2D, w: number, h: number, colorA: string, colorB: string, depth: number, parallax: number, fromTop: boolean) {
   ctx.save()
-  const alpha = 0.16 + depth * 0.16
-  ctx.fillStyle = rgba(color, alpha)
-  const yBase = h * (0.22 + depth * 0.07) + parallax * (0.2 + depth * 0.25)
-  const span = w / (5 + depth * 3)
-  const archH = h * (0.55 - depth * 0.08)
-  for (let i = -1; i < 8; i++) {
-    const x = i * span + (depth * 22)
+  const alpha = 0.14 + depth * 0.2
+  const seed0 = depth * 39.1 + (fromTop ? 100 : 0)
+  const count = Math.floor(9 + depth * 7)
+  const baseY = fromTop
+    ? parallax * (0.08 + depth * 0.1)
+    : h * (0.82 - depth * 0.05) + parallax * (0.1 + depth * 0.18)
+
+  for (let i = 0; i < count; i++) {
+    const s = rand(seed0 + i * 13.7)
+    const x = (i / (count - 1)) * w * 1.05 - w * 0.025 + (rand(seed0 + i * 7.7) - 0.5) * w * 0.05
+    const height = lerp(h * 0.15, h * (0.42 + depth * 0.1), s)
+    const hw = lerp(8, 28, rand(seed0 + i * 5.5)) * (0.6 + depth * 0.55)
+    const color = (i % 3 === 0) ? colorA : colorB
+
+    const g = fromTop
+      ? ctx.createLinearGradient(x, baseY, x, baseY + height)
+      : ctx.createLinearGradient(x, baseY - height, x, baseY + 20)
+    g.addColorStop(0, rgba(color, alpha))
+    g.addColorStop(0.6, rgba(color, alpha * 0.55))
+    g.addColorStop(1, rgba('#000000', 0))
+    ctx.fillStyle = g
+
     ctx.beginPath()
-    ctx.moveTo(x, h)
-    ctx.lineTo(x, yBase + archH)
-    ctx.quadraticCurveTo(x + span * 0.5, yBase, x + span, yBase + archH)
-    ctx.lineTo(x + span, h)
+    if (fromTop) {
+      ctx.moveTo(x, baseY)
+      ctx.lineTo(x - hw / 2, baseY + height * 0.25)
+      ctx.lineTo(x - hw * 0.18, baseY + height)
+      ctx.lineTo(x + hw * 0.18, baseY + height)
+      ctx.lineTo(x + hw / 2, baseY + height * 0.25)
+    } else {
+      ctx.moveTo(x, baseY - height)
+      ctx.lineTo(x - hw * 0.18, baseY - height * 0.22)
+      ctx.lineTo(x - hw / 2, baseY)
+      ctx.lineTo(x + hw / 2, baseY)
+      ctx.lineTo(x + hw * 0.18, baseY - height * 0.22)
+    }
     ctx.closePath()
     ctx.fill()
-  }
-  // Nave ribs
-  ctx.strokeStyle = rgba(color, 0.12 + depth * 0.1)
-  ctx.lineWidth = 1
-  for (let i = 0; i < 8; i++) {
-    const x = i * span + span * 0.5 + depth * 20
+
+    // Facet line — gives the crystal-cut look
+    ctx.strokeStyle = rgba(colorA, alpha * 0.4)
+    ctx.lineWidth = 0.5
     ctx.beginPath()
-    ctx.moveTo(x, yBase + archH * 0.12)
-    ctx.lineTo(x, h)
+    if (fromTop) {
+      ctx.moveTo(x, baseY)
+      ctx.lineTo(x, baseY + height * 0.85)
+    } else {
+      ctx.moveTo(x, baseY - height)
+      ctx.lineTo(x, baseY - height * 0.18)
+    }
     ctx.stroke()
   }
   ctx.restore()
 }
 
-function drawCrystalSpires(ctx: CanvasRenderingContext2D, w: number, h: number, colorA: string, colorB: string, depth: number, parallax: number) {
+function drawCrystalMountains(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
   ctx.save()
-  const alpha = 0.12 + depth * 0.18
-  const baseY = h * (0.78 - depth * 0.06) + parallax * (0.12 + depth * 0.22)
-  const count = 7 + Math.floor(depth * 5)
-  for (let i = 0; i < count; i++) {
-    const seed = i * 13.7 + depth * 9.1
-    const x = (i / (count - 1)) * w + (rand(seed) - 0.5) * 30
-    const s = rand(seed + 3.1)
-    const height = lerp(h * 0.22, h * (0.52 + depth * 0.08), s)
-    const width = lerp(18, 56, rand(seed + 5.5)) * (0.8 + depth * 0.5)
-    const g = ctx.createLinearGradient(x, baseY - height, x, baseY + 40)
-    g.addColorStop(0, rgba(colorA, alpha * 0.75))
-    g.addColorStop(0.55, rgba(colorB, alpha * 0.65))
-    g.addColorStop(1, rgba('#000000', 0))
-    ctx.fillStyle = g
-    ctx.beginPath()
-    ctx.moveTo(x, baseY - height)
-    ctx.lineTo(x - width * 0.45, baseY)
-    ctx.lineTo(x, baseY + 22)
-    ctx.lineTo(x + width * 0.45, baseY)
-    ctx.closePath()
-    ctx.fill()
+  const alpha = 0.18 + depth * 0.16
+  const baseY = h * (0.78 - depth * 0.06) + parallax * (0.1 + depth * 0.2)
+  const seed0 = depth * 61.1 + 200
+  const peaks = Math.floor(3 + depth * 2)
+
+  ctx.fillStyle = rgba(color, alpha)
+  ctx.beginPath()
+  ctx.moveTo(0, baseY)
+
+  for (let i = 0; i <= peaks; i++) {
+    const x = (i / peaks) * w
+    const peakH = lerp(h * 0.18, h * (0.38 + depth * 0.08), rand(seed0 + i * 17.3))
+    const nextX = ((i + 0.5) / peaks) * w
+    // valley between peaks
+    ctx.lineTo(x, baseY - peakH)
+    if (i < peaks) ctx.lineTo(nextX, baseY - peakH * 0.2)
   }
+
+  ctx.lineTo(w, baseY)
+  ctx.lineTo(w, h)
+  ctx.lineTo(0, h)
+  ctx.closePath()
+  ctx.fill()
   ctx.restore()
 }
 
 function drawGraves(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, row: number, parallax: number) {
   ctx.save()
-  const alpha = 0.1 + row * 0.12
-  ctx.fillStyle = rgba(color, alpha)
-  const y = h * (0.72 + row * 0.06) + parallax * (0.08 + row * 0.18)
-  const count = 10 + row * 4
+  const alpha = 0.12 + row * 0.13
+  const y = h * (0.74 + row * 0.05) + parallax * (0.08 + row * 0.18)
+  const count = 8 + row * 3
+  const seed0 = row * 44.7
+
   for (let i = 0; i < count; i++) {
-    const x = (i / (count - 1)) * w + (Math.sin(i * 2.3 + row) * 14)
-    const ww = lerp(10, 26, (Math.sin(i * 3.1 + row * 2.0) * 0.5 + 0.5) as number) * (0.8 + row * 0.25)
-    const hh = lerp(18, 44, (Math.cos(i * 1.9 + row * 1.7) * 0.5 + 0.5) as number) * (0.8 + row * 0.25)
-    ctx.beginPath()
-    ctx.roundRect(x - ww / 2, y - hh, ww, hh, 6)
-    ctx.fill()
+    const s = rand(seed0 + i * 11.1)
+    const x = (i / (count - 1)) * w + (Math.sin(i * 2.3 + row) * 12)
+    const type = Math.floor(rand(seed0 + i * 7.3) * 3) // 0=rounded top, 1=cross, 2=mound
+    const gw = lerp(10, 22, rand(seed0 + i * 3.3)) * (0.7 + row * 0.35)
+    const gh = lerp(20, 48, s) * (0.7 + row * 0.35)
+
+    ctx.fillStyle = rgba(color, alpha)
+    ctx.strokeStyle = rgba(color, alpha * 0.6)
+    ctx.lineWidth = 0.8
+
+    if (type === 0) {
+      // Rounded-top gravestone
+      ctx.beginPath()
+      ctx.moveTo(x - gw / 2, y)
+      ctx.lineTo(x - gw / 2, y - gh * 0.6)
+      ctx.quadraticCurveTo(x, y - gh, x + gw / 2, y - gh * 0.6)
+      ctx.lineTo(x + gw / 2, y)
+      ctx.closePath()
+      ctx.fill()
+    } else if (type === 1) {
+      // Cross gravestone
+      const cw = gw * 0.22
+      // Vertical beam
+      ctx.beginPath()
+      ctx.rect(x - cw / 2, y - gh, cw, gh)
+      ctx.fill()
+      // Horizontal beam
+      ctx.beginPath()
+      ctx.rect(x - gw * 0.45, y - gh * 0.72, gw * 0.9, cw)
+      ctx.fill()
+    } else {
+      // Small burial mound
+      ctx.beginPath()
+      ctx.ellipse(x, y, gw * 1.1, gh * 0.28, 0, Math.PI, 0)
+      ctx.fill()
+    }
   }
+
+  // Ground dirt strip
+  ctx.fillStyle = rgba(color, alpha * 0.55)
+  ctx.beginPath()
+  ctx.moveTo(0, y + 4)
+  for (let i = 0; i <= 20; i++) {
+    const x = (i / 20) * w
+    const bump = Math.sin(i * 1.8 + row * 3.1) * 5
+    ctx.lineTo(x, y + 8 + bump)
+  }
+  ctx.lineTo(w, h)
+  ctx.lineTo(0, h)
+  ctx.closePath()
+  ctx.fill()
+
   ctx.restore()
 }
 
@@ -330,36 +546,101 @@ function drawTreeSentinel(ctx: CanvasRenderingContext2D, w: number, h: number, c
   ctx.restore()
 }
 
-function drawCanopy(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
+function drawLeafCanopy(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, depth: number, parallax: number) {
   ctx.save()
-  const alpha = 0.1 + depth * 0.18
+  const alpha = 0.12 + depth * 0.2
+  const baseY = h * (depth * 0.06) + parallax * (0.12 + depth * 0.16)
+  const seed0 = depth * 83.1
+
+  // Canopy mass — wavy silhouette of overlapping leaf clusters
   ctx.fillStyle = rgba(color, alpha)
-  const y = h * (0.0 + depth * 0.04) + parallax * (0.14 + depth * 0.18)
-  const wave = 18 + depth * 20
   ctx.beginPath()
-  ctx.moveTo(0, y)
-  const steps = 16
+  ctx.moveTo(0, 0)
+  const steps = 28
   for (let i = 0; i <= steps; i++) {
     const x = (i / steps) * w
-    const d = Math.sin(i * 1.35 + depth * 2.4) * wave
-    ctx.lineTo(x, y + 70 + d)
+    const wave1 = Math.sin(i * 1.1 + depth * 2.8) * (22 + depth * 18)
+    const wave2 = Math.sin(i * 2.7 + depth * 1.4) * (10 + depth * 8)
+    const bump = baseY + 55 + depth * 30 + wave1 + wave2
+    ctx.lineTo(x, bump)
   }
   ctx.lineTo(w, 0)
-  ctx.lineTo(0, 0)
   ctx.closePath()
   ctx.fill()
 
-  // Vines (depth-separated)
-  ctx.strokeStyle = rgba(color, 0.18 + depth * 0.12)
-  ctx.lineWidth = 1.5
-  for (let i = 0; i < 5; i++) {
-    const x = (i / 4) * w + Math.sin(i * 3.2 + depth) * 16
-    const len = h * (0.25 + depth * 0.08)
+  // Individual leaf clusters (round lobes) along canopy edge
+  const clusterCount = Math.floor(6 + depth * 5)
+  for (let i = 0; i < clusterCount; i++) {
+    const x = (i / clusterCount) * w * 1.1 - w * 0.05 + (rand(seed0 + i * 9.1) - 0.5) * w * 0.08
+    const cy = baseY + 40 + depth * 20 + (Math.sin(i * 2.2 + depth) * 0.5 + 0.5) * 30
+    const r = lerp(18, 46, rand(seed0 + i * 5.5)) * (0.6 + depth * 0.55)
+    ctx.fillStyle = rgba(color, alpha * (0.8 + rand(seed0 + i * 3.1) * 0.5))
     ctx.beginPath()
-    ctx.moveTo(x, y + 60)
-    ctx.bezierCurveTo(x + 12, y + 120, x - 18, y + 160, x + 8, y + 60 + len)
-    ctx.stroke()
+    ctx.arc(x, cy, r, 0, Math.PI * 2)
+    ctx.fill()
+    // second lobe
+    ctx.beginPath()
+    ctx.arc(x + r * 0.7, cy - r * 0.3, r * 0.75, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(x - r * 0.65, cy - r * 0.2, r * 0.7, 0, Math.PI * 2)
+    ctx.fill()
   }
+
+  // Hanging vines with leaf nodes
+  const vineCount = Math.floor(4 + depth * 3)
+  ctx.strokeStyle = rgba(color, 0.22 + depth * 0.14)
+  ctx.lineWidth = 1.2 + depth * 0.6
+  for (let i = 0; i < vineCount; i++) {
+    const vx = (i / vineCount) * w * 1.1 - w * 0.05 + (rand(seed0 + i * 6.6) - 0.5) * w * 0.1
+    const startY = baseY + 50 + depth * 15
+    const len = h * (0.18 + depth * 0.08) * (0.6 + rand(seed0 + i * 4.4) * 0.8)
+    const swing = Math.sin(seed0 + i * 3.3) * 18
+
+    ctx.beginPath()
+    ctx.moveTo(vx, startY)
+    ctx.bezierCurveTo(
+      vx + swing * 0.5, startY + len * 0.35,
+      vx - swing * 0.3, startY + len * 0.65,
+      vx + swing, startY + len
+    )
+    ctx.stroke()
+
+    // Leaf nodes along vine
+    const nodeCount = Math.floor(2 + depth * 2)
+    for (let n = 0; n < nodeCount; n++) {
+      const t = (n + 1) / (nodeCount + 1)
+      const nx = lerp(vx, vx + swing, t)
+      const ny = startY + len * t
+      const lr = 5 + rand(seed0 + i * 2.2 + n) * 8
+      ctx.fillStyle = rgba(color, alpha * 1.2)
+      ctx.beginPath()
+      ctx.ellipse(nx + lr * 0.6, ny, lr, lr * 0.55, -0.4 + rand(seed0 + n) * 0.8, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.beginPath()
+      ctx.ellipse(nx - lr * 0.6, ny, lr, lr * 0.55, 0.4 - rand(seed0 + n + 1) * 0.8, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  }
+
+  // Floor bushes — rounded mounds at ground level
+  const bushCount = Math.floor(5 + depth * 4)
+  const bushY = h * (0.88 - depth * 0.03) + parallax * 0.1
+  for (let i = 0; i < bushCount; i++) {
+    const bx = (i / bushCount) * w * 1.1 - w * 0.05 + (rand(seed0 + i * 12.2) - 0.5) * w * 0.07
+    const br = lerp(20, 52, rand(seed0 + i * 8.8)) * (0.5 + depth * 0.6)
+    ctx.fillStyle = rgba(color, alpha * 0.9)
+    ctx.beginPath()
+    ctx.arc(bx, bushY, br, Math.PI, 0)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(bx + br * 0.65, bushY - br * 0.1, br * 0.72, Math.PI, 0)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(bx - br * 0.6, bushY - br * 0.08, br * 0.65, Math.PI, 0)
+    ctx.fill()
+  }
+
   ctx.restore()
 }
 
@@ -623,29 +904,33 @@ export function ZoneCanvas({ zone, active }: { zone: ZoneConfig; active: boolean
 
       // Silhouette depth layers (far -> mid -> close)
       if (zone.id === 'void') {
-        drawStalactites(ctx, w, h, '#0b1020', 0.2, par * 28)
-        drawStalactites(ctx, w, h, '#070b16', 0.55, par * 38)
-        drawStalactites(ctx, w, h, '#050812', 0.9, par * 52)
-        drawPillars(ctx, w, h, '#10182a', par * 18)
+        drawAbyssMounds(ctx, w, h, zone.surface, 0.2, par * 18)
+        drawAbyssMounds(ctx, w, h, zone.mid, 0.55, par * 30)
+        drawAbyssMounds(ctx, w, h, darken(zone.mid, 0.1), 0.9, par * 44)
+        drawAbyssPillars(ctx, w, h, zone.surface, 0.2, par * 22)
+        drawAbyssPillars(ctx, w, h, zone.mid, 0.55, par * 36)
+        drawAbyssPillars(ctx, w, h, darken(zone.mid, 0.14), 0.9, par * 52)
       } else if (zone.id === 'core') {
-        drawGothicArches(ctx, w, h, '#0b1220', 0.2, par * 22)
-        drawGothicArches(ctx, w, h, '#07101c', 0.55, par * 34)
-        drawGothicArches(ctx, w, h, '#05090f', 0.9, par * 50)
+        drawCityBuildings(ctx, w, h, zone.surface, 0.2, par * 22)
+        drawCityBuildings(ctx, w, h, zone.mid, 0.55, par * 34)
+        drawCityBuildings(ctx, w, h, darken(zone.mid, 0.14), 0.9, par * 50)
       } else if (zone.id === 'labs') {
-        drawCrystalSpires(ctx, w, h, zone.accent1, zone.accent2, 0.2, par * 18)
-        drawCrystalSpires(ctx, w, h, zone.accent1, zone.accent2, 0.55, par * 30)
-        drawCrystalSpires(ctx, w, h, zone.accent1, zone.accent2, 0.9, par * 44)
-        // small stalactites above
-        drawStalactites(ctx, w, h, '#050c18', 0.35, par * 14)
+        drawCrystalMountains(ctx, w, h, zone.surface, 0.2, par * 18)
+        drawCrystalMountains(ctx, w, h, zone.mid, 0.55, par * 28)
+        drawCrystalSpikes(ctx, w, h, zone.accent1, zone.accent2, 0.2, par * 18, false)
+        drawCrystalSpikes(ctx, w, h, zone.accent1, zone.accent2, 0.55, par * 30, false)
+        drawCrystalSpikes(ctx, w, h, zone.accent1, zone.accent2, 0.9, par * 44, false)
+        drawCrystalSpikes(ctx, w, h, zone.accent1, zone.accent2, 0.35, par * 14, true)
+        drawCrystalSpikes(ctx, w, h, zone.accent1, zone.accent2, 0.7, par * 22, true)
       } else if (zone.id === 'logs') {
-        drawGraves(ctx, w, h, '#1a1030', 0, par * 10)
-        drawGraves(ctx, w, h, '#120a22', 1, par * 18)
-        drawGraves(ctx, w, h, '#0c0616', 2, par * 28)
+        drawGraves(ctx, w, h, zone.surface, 0, par * 10)
+        drawGraves(ctx, w, h, zone.mid, 1, par * 18)
+        drawGraves(ctx, w, h, darken(zone.mid, 0.14), 2, par * 28)
         drawTreeSentinel(ctx, w, h, zone.accent2, par * 22)
       } else if (zone.id === 'signal') {
-        drawCanopy(ctx, w, h, '#0a2a14', 0.2, par * 18)
-        drawCanopy(ctx, w, h, '#062010', 0.55, par * 30)
-        drawCanopy(ctx, w, h, '#03140a', 0.9, par * 44)
+        drawLeafCanopy(ctx, w, h, zone.surface, 0.2, par * 18)
+        drawLeafCanopy(ctx, w, h, zone.mid, 0.55, par * 30)
+        drawLeafCanopy(ctx, w, h, darken(zone.mid, 0.14), 0.9, par * 44)
       }
 
       // Particle step & draw
@@ -688,4 +973,3 @@ export function ZoneCanvas({ zone, active }: { zone: ZoneConfig; active: boolean
     />
   )
 }
-
