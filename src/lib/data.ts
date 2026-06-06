@@ -11,7 +11,7 @@ export const personalInfo = {
   location: 'Islamabad, Pakistan',
   educationPeriod: 'Sep 2022 - Jun 2026',
   seeking: 'AI / Software Engineering Role',
-  bio: 'I build AI-powered systems that combine speech processing, computer vision, and modern web technologies. My recent work includes multilingual meeting intelligence platforms and workflow automation tools. Looking for an AI/SWE role where the work actually ships.',
+  bio: 'I work at the intersection of LLMs and real software - building the pipelines, agents, and full-stack systems that turn language models into something people can actually use. My recent work spans meeting intelligence platforms, RAG-powered automation, and agentic workflows. Finishing my CS degree at FAST-NUCES in 2026 and looking for a role where the work ships and stacks up over time.',
 }
 
 // ==================== SINGLE SOURCE OF TRUTH FOR SKILLS ====================
@@ -60,41 +60,43 @@ export type Project = {
 // ==================== PROJECTS ====================
 export const projects: Project[] = [
   {
-    title: 'Automated Scrum Master (ScrumMate)',
-    type: 'Final Year Project',
-    status: 'completed',
-    period: 'Aug 2025 – May 2026',
-    description:
-      'AI-powered Scrum assistant that converts meeting recordings into sprint-ready deliverables — auto-generated meeting minutes, prioritised user stories, and skill-matched task assignments — with a built-in RAG interface for querying your entire project history.',
-    problem:
-      'Agile teams waste hours manually creating user stories and meeting notes after every sprint.',
-    solution:
-      'AI assistant that converts meeting recordings into sprint-ready deliverables via an agentic RAG pipeline.',
-    impact:
-      'Processes 1+ hour meetings and generates sprint stories in <30 sec; reduces post-meeting admin work by ~70%.',
-    challenges: [
-      'Real-time audio chunking and transcript ingestion at scale',
-      'Speaker-aware summarisation to attribute action items accurately',
-      'Low-latency RAG retrieval over growing meeting history (ChromaDB)',
-      'Developer profiling module matching extracted stories to team skills and workload',
-    ],
-    stack: ['Python', 'FastAPI', 'Gemini', 'ChromaDB', 'RAG', 'React', 'uvicorn'],
-    pipeline: [
-      'Transcript Ingestion',
-      'Knowledge Base Creation',
-      'Meeting Summarisation',
-      'User Story Generation',
-      'Smart Task Assignment',
-      'RAG Query Interface',
-    ],
-    github: 'https://github.com/mishalali-A2/ScrumMate',
-    highlights: [
-      'Agentic pipeline: ingests meeting transcripts, builds a searchable knowledge base, auto-generates meeting minutes, extracts user stories, and assigns tasks by developer skill and workload',
-      'RAG query interface over meeting history lets the team ask questions across all past transcripts via ChromaDB vector search',
-      'Developer profiling module matches extracted stories to team members based on skills and current workload',
-      'FastAPI server exposes pipeline execution, status polling, results retrieval, and RAG endpoints; React frontend triggers runs and displays output',
-    ],
-  },
+  title: 'Automated Scrum Master (ScrumMate)',
+  type: 'Final Year Project',
+  status: 'completed',
+  period: 'Aug 2025 – May 2026',
+  description:
+    'Multi-agent AI system that automates the full Scrum lifecycle — real-time meeting transcription with speaker diarization, LLM-extracted user stories and action items, skill-based task assignment, and a RAG interface for querying your entire project history.',
+  problem:
+    'Agile teams waste hours on manual coordination — writing meeting notes, updating boards, and assigning tasks — instead of shipping.',
+  solution:
+    'Event-driven multi-agent pipeline that ingests meeting audio, extracts structured sprint artifacts via LLMs, and syncs them to Trello automatically.',
+  impact:
+    'Processes 1+ hour meetings and generates sprint-ready user stories in <30 sec; reduces post-meeting admin work by ~70%. 94.3% pass rate across 35 unit tests.',
+  challenges: [
+    'Speaker-aware RAG chunking — preserving speaker turns and context across transcript segments while respecting LLM token limits',
+    'Hierarchical summarisation — three-level abstraction from raw chunks to topic summaries to executive overview using Llama 3.2',
+    'Hybrid task assignment — combining rule-based skill matching with LLM reasoning to balance workload across developers',
+    'OAuth integration complexity with Jira and GitHub required significant debugging to achieve reliable bidirectional sync',
+  ],
+  stack: ['Python', 'FastAPI', 'LangGraph', 'Ollama (Llama 3.2)', 'n8n', 'PostgreSQL', 'ChromaDB', 'React'],
+  pipeline: [
+    'Audio Ingestion & Transcription',
+    'Speaker Diarization',
+    'RAG Chunking',
+    'Hierarchical Summarisation',
+    'User Story & Action Item Extraction',
+    'Skill-Based Task Assignment',
+    'Trello Sync via n8n',
+    'RAG Query Interface',
+  ],
+  github: 'https://github.com/mishalali-A2/ScrumMate',
+  highlights: [
+    'Event-driven microservices architecture with three specialised agents — Scheduler, Collector, Facilitator — communicating through a message queue for independent scaling and fault isolation',
+    'Speaker-aware chunking algorithm preserves conversational context across transcript segments, feeding a ChromaDB vector store for semantic search across all past meetings',
+    'Hybrid assignment algorithm scores developers by skill overlap, availability, preference, and historical completion rate — then uses LLM reasoning to finalise allocations',
+    '35 unit tests across all 8 modules with 94.3% pass rate and 85% code coverage; external Jira/GitHub sync partially realised pending OAuth refinement',
+  ],
+},
   {
     title: 'Hotel Booking Microservices Platform',
     type: 'Full-stack',
@@ -217,10 +219,10 @@ export const experience: ExperienceEntry[] = [
     period: 'Jun 2025 - Aug 2025',
     location: 'Islamabad, Pakistan',
     highlights: [
-      'Built end-to-end Whisper ASR pipelines for real-time transcription, speaker segmentation, and audio preprocessing within a meeting intelligence platform',
-      'Developed LLM-powered summarization modules with structured prompt engineering to automatically extract action items, decisions, and meeting summaries',
-      'Developed computer vision features using OpenCV for video frame extraction',
-      'Automated model evaluation and preprocessing workflows using Python, reducing manual pipeline overhead',
+      'Built end-to-end Whisper ASR pipelines for real-time transcription, speaker segmentation, and audio preprocessing within a meeting intelligence platform - improving transcription accuracy by 25% and reducing latency by 30%',
+      'Developed LLM-powered summarization modules with structured prompt engineering to automatically extract action items, decisions, and meeting summaries - reducing post meeting admin time by ~70%',
+      'Developed auto-attendance feature using OpenCV for video frame extraction, face detection, and attendance logging - reducing manual attendance tracking time by ~80%',
+      'Automated model evaluation and preprocessing workflows using Python, reducing manual pipeline overhead by 50%',
     ],
   },
 ]
@@ -235,10 +237,13 @@ export const education: EducationEntry[] = [
     courses: [
       'Deep Learning',
       'Generative AI',
+      'Artificial Intelligence',
+      'Software Design',
+      'Software Engineering',
+      'Cloud Computing',
       'Data Structures & Algorithms',
       'Operating Systems',
-      'Databases',
-      'Software Engineering',
+      'Database Systems',
     ],
   },
   {
@@ -252,9 +257,24 @@ export const education: EducationEntry[] = [
       'Chemistry',
     ],
   },
+  {
+    institution: 'Beaconhouse School System',
+    degree: 'O-Level. GCSE',
+    period: 'Sep 2020 - Jun 2022',
+    location: 'Islamabad, Pakistan',
+    courses: [
+      'Mathematics',
+      'Physics',
+      'Chemistry',
+      'Computer Science',
+      'English Language',
+      'Urdu Language',
+      'Islamic Studies',
+      'Pakistan Studies',
+      'Global Perspectives'
+    ],
+  },
 ]
 
 // Utility: all coursework in one array
 export const courseworkHighlights = education.flatMap((e) => e.courses)
-
-// ==================== CURRENTLY BUILDING ====================

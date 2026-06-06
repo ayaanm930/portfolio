@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { IconArrowDown, IconBook2, IconBrandGithub, IconBrandLinkedin, IconDownload, IconExternalLink, IconFlask2, IconMail, IconPhone } from '@tabler/icons-react'
 import type { EducationEntry, ExperienceEntry, Project } from '@/lib/data'
 import { cn } from '@/lib/utils'
@@ -26,68 +26,6 @@ type Content = {
   education: EducationEntry[]
 }
 
-const SCRUMMATE_DIAGRAM = `
-.                   ┌─────────────────────┐
-                    │     Team Users      │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │    ScrumMate UI     │
-                    │  Project Dashboard  │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ Agentic Project     │
-                    │      Manager        │
-                    └──────────┬──────────┘
-                               │
-         ┌─────────────────────┼─────────────────────┐
-         │                     │                     │
-         ▼                     ▼                     ▼
- ┌───────────────┐   ┌────────────────┐   ┌────────────────┐
- │ Project Mgmt  │   │ Meeting Agent  │   │ Metrics Engine │
- │ - Create      │   │ - Host Meeting │   │ - Velocity     │
- │ - Update      │   │ - Record Audio │   │ - Progress     │
- │ - Track       │   │ - Generate MoM │   │ - Analytics    │
- └───────┬───────┘   └───────┬────────┘   └───────┬────────┘
-         │                   │                    │
-         │                   ▼                    │
-         │         ┌──────────────────┐           │
-         │         │   AI Processing  │           │
-         │         │ - Summarization  │           │
-         │         │ - User Stories   │           │
-         │         └────────┬─────────┘           │
-         │                  │                     │
-         └──────────────────┼─────────────────────┘
-                            │
-                            ▼
-                 ┌─────────────────────┐
-                 │      n8n Hub        │
-                 │  Workflow Engine    │
-                 └──────────┬──────────┘
-                            │
-            ┌───────────────┼────────────────┐
-            │               │                │
-            ▼               ▼                ▼
- ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
- │ Trello Create  │ │ Trello Update  │ │ Database Sync  │
- │ Boards         │ │ Cards/Stories  │ │ Projects/Data  │
- └────────────────┘ └────────────────┘ └────────────────┘
-                            │
-                            ▼
-                 ┌─────────────────────┐
-                 │   Trello Board      │
-                 │  Sprint Backlog     │
-                 │  User Stories       │
-                 │  Tasks & Progress   │
-                 └─────────────────────┘
-`.trim()
-
-const MEETING_MASTER_DIAGRAM = `
- 
-`.trim()
 
 export function ZoneSection({
   zone,
@@ -102,7 +40,6 @@ export function ZoneSection({
   const audio = useAudio()
   const [resumeOpen, setResumeOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [archExpanded, setArchExpanded] = useState(false)
 
   useEffect(() => {
     if (!selectedProject) return
@@ -168,12 +105,11 @@ export function ZoneSection({
                 {content.personalInfo.name.toUpperCase()}
               </h1>
               <div className="mt-3 text-base tracking-[0.12em] opacity-90 md:text-lg">
-                AI Engineer &amp; Full-Stack Developer Building Real-Time Intelligent Systems
+                AI Engineer, Full-Stack Developer & FAST Graduate
               </div>
 
               <p className="mt-6 max-w-2xl text-sm leading-relaxed text-white/75 md:text-base">
-                CS graduate who has shipped production ML features — Whisper ASR pipelines, LLM summarization modules, and computer vision workflows at TechGenesys.
-                I build AI-powered applications: from a RAG-powered Scrum automation platform to an LSTM racing agent trained from scratch.
+                Automation pipelines, agentic workflows, LLM integration, and full-stack systems - I take language models and build the infrastructure around them that makes them actually useful. Currently finishing my CS degree at FAST-NUCES while shipping real things into production.
               </p>
 
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
@@ -222,15 +158,121 @@ export function ZoneSection({
 
         {zone.id === 'core' && (
           <div className="grid gap-4 sm:gap-6 md:gap-10 grid-cols-1 md:grid-cols-[0.8fr_1.2fr]">
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm">
-              <div className="text-[11px] tracking-[0.38em] text-white/70">ABOUT</div>
-              <h2 className="mt-3 text-2xl tracking-[0.16em]" style={{ color: zone.accent1 }}>
-                DEVELOPER PROFILE
-              </h2>
-              <p className="mt-4 text-sm leading-relaxed text-white/70">
-                {content.personalInfo.bio}
-              </p>
-              <div className="mt-5 text-xs text-white/65">{zone.particleDescription}</div>
+            <div className="flex flex-col gap-4">
+              {/* Bio card */}
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm">
+                <div className="text-[11px] tracking-[0.38em] text-white/70">ABOUT</div>
+                <h2 className="mt-3 text-2xl tracking-[0.16em]" style={{ color: zone.accent1 }}>
+                  DEVELOPER PROFILE
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-white/70">
+                  {content.personalInfo.bio}
+                </p>
+                <div className="mt-5 text-xs text-white/65">{zone.particleDescription}</div>
+              </div>
+
+              {/* Resume summary card */}
+              <div
+                className="rounded-2xl border bg-black/28 p-4 sm:p-5 md:backdrop-blur-sm"
+                style={{ borderColor: `${zone.accent1}30`, boxShadow: `0 0 32px ${zone.accent1}08` }}
+              >
+                {/* Header */}
+                <div className="text-[11px] tracking-[0.38em] text-white/70">RESUME</div>
+                <div className="mt-3">
+                  <div className="text-base font-medium tracking-[0.12em]" style={{ color: zone.accent1 }}>
+                    {content.personalInfo.name.toUpperCase()}
+                  </div>
+                  <div className="mt-0.5 text-[11px] tracking-[0.22em] text-white/55">
+                    {content.personalInfo.title}
+                  </div>
+                </div>
+
+                {/* Skills snapshot */}
+                <div className="mt-4">
+                  <div className="text-[10px] tracking-[0.3em] text-white/40 mb-2">STACK</div>
+                  <div className="flex flex-wrap gap-x-2 gap-y-1">
+                    {Object.values(content.technicalSkills).flat().slice(0, 8).map((skill) => (
+                      <span key={skill} className="text-[11px] text-white/60">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 h-px opacity-20" style={{ background: `linear-gradient(90deg, ${zone.accent1}, transparent)` }} />
+
+                {/* Experience */}
+                <div className="mt-4">
+                  <div className="text-[10px] tracking-[0.3em] text-white/40 mb-2">EXPERIENCE</div>
+                  <ul className="space-y-1.5">
+                    {content.experience.map((exp) => (
+                      <li key={exp.company} className="flex items-baseline gap-2">
+                        <span className="h-1 w-1 shrink-0 rounded-full mt-1.5" style={{ backgroundColor: zone.accent1 }} />
+                        <span className="text-[11px] text-white/75 leading-relaxed">
+                          <span className="text-white/90">{exp.company}</span>
+                          <span className="text-white/45"> — {exp.role}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-4 h-px opacity-20" style={{ background: `linear-gradient(90deg, ${zone.accent2}, transparent)` }} />
+
+                {/* Education */}
+                <div className="mt-4">
+                  <div className="text-[10px] tracking-[0.3em] text-white/40 mb-2">EDUCATION</div>
+                  <ul className="space-y-1.5">
+                    {content.education.map((edu) => (
+                      <li key={edu.institution} className="flex items-baseline gap-2">
+                        <span className="h-1 w-1 shrink-0 rounded-full mt-1.5" style={{ backgroundColor: zone.accent2 }} />
+                        <span className="text-[11px] text-white/75 leading-relaxed">
+                          <span className="text-white/90">{edu.institution}</span>
+                          <span className="text-white/45"> — {edu.degree}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-4 h-px opacity-20" style={{ background: `linear-gradient(90deg, ${zone.accent1}, transparent)` }} />
+
+                {/* Selected projects */}
+                <div className="mt-4">
+                  <div className="text-[10px] tracking-[0.3em] text-white/40 mb-2">SELECTED SYSTEMS</div>
+                  <div className="flex flex-wrap gap-x-2 gap-y-1">
+                    {content.projects.map((p) => (
+                      <span key={p.title} className="text-[11px] text-white/60">
+                        {p.title}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="mt-5 flex gap-2">
+                  <a
+                    href={content.personalInfo.resumeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-[11px] tracking-[0.2em] text-white/80 hover:bg-white/10 hover:border-white/20 transition-colors"
+                    style={{ boxShadow: `0 0 16px ${zone.accent1}0a` }}
+                    onClick={() => audio.play('click')}
+                  >
+                    <IconExternalLink size={13} style={{ color: zone.accent1 }} />
+                    VIEW
+                  </a>
+                  <a
+                    href={content.personalInfo.resumeUrl}
+                    download
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-[11px] tracking-[0.2em] text-white/70 hover:bg-black/30 hover:border-white/20 transition-colors"
+                    onClick={() => audio.play('click')}
+                  >
+                    <IconDownload size={13} style={{ color: zone.accent2 }} />
+                    DOWNLOAD
+                  </a>
+                </div>
+              </div>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm lg:p-8">
@@ -343,27 +385,6 @@ export function ZoneSection({
                 </div>
               </div>
 
-              {/* Architecture diagram (expandable) */}
-              <div className="mt-5">
-                <button
-                  type="button"
-                  className="flex items-center gap-2 text-[11px] tracking-[0.28em] text-white/50 hover:text-white/80 transition-colors"
-                  onClick={(e) => { e.stopPropagation(); setArchExpanded((v) => !v) }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: archExpanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                  ARCHITECTURE DIAGRAM
-                </button>
-                {archExpanded && (
-                  <pre
-                    className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-black/40 px-4 py-4 text-[11px] leading-relaxed text-white/65 font-mono"
-                    style={{ boxShadow: `0 0 30px ${zone.accent1}08` }}
-                  >
-                    {SCRUMMATE_DIAGRAM}
-                  </pre>
-                )}
-              </div>
 
               <div className="mt-6 sm:mt-7 flex flex-col gap-2 sm:gap-3 sm:flex-row">
                 <SfxButton
@@ -518,74 +539,11 @@ export function ZoneSection({
               </div>
 
               {/* Mobile: horizontal snap scroll - one card at a time */}
-              <div className="relative lg:hidden px-4 pb-6">
-                <div
-                  className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3"
-                  style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
-                >
-                  {content.projects.slice(1).map((p, idx) => (
-                    <div
-                      key={p.title}
-                      className="w-full shrink-0 snap-center rounded-2xl border border-white/10 bg-black/28 p-4 cursor-pointer"
-                      style={{ boxShadow: idx % 2 === 0 ? `0 0 24px ${zone.accent1}0a` : `0 0 24px ${zone.accent2}0a` }}
-                      onClick={(e) => {
-                        if ((e.target as HTMLElement).closest('a')) {
-                          return
-                        }
-                        setSelectedProject(p)
-                        audio.play('click')
-                      }}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="text-sm tracking-[0.12em] font-medium" style={{ color: zone.accent1 }}>
-                          {p.title}
-                        </div>
-                        <div className="text-[10px] tracking-[0.24em] text-white/40 uppercase">
-                          {p.status ?? 'active'}
-                        </div>
-                      </div>
-                      <div className="mt-2 text-xs leading-relaxed text-white/70">{p.description}</div>
-                      {p.impact && (
-                        <div className="mt-2 rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 text-[11px] leading-relaxed" style={{ color: zone.accent2 }}>
-                          <span className="text-white/35 mr-1">▸</span>{p.impact}
-                        </div>
-                      )}
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {p.stack.slice(0, 5).map((t) => (
-                          <span key={t} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/75">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <a
-                          className="inline-flex items-center gap-1.5 text-xs tracking-[0.14em] text-white/55 underline decoration-white/15 underline-offset-4 hover:text-white/85"
-                          href={p.github}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <IconBrandGithub size={13} />
-                          GITHUB
-                        </a>
-                        <span className="text-[10px] tracking-[0.16em] text-white/45">
-                          VIEW DETAILS →
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {/* Swipe hint dots */}
-                <div className="mt-1 flex justify-center gap-1.5">
-                  {content.projects.slice(1).map((p, i) => (
-                    <div
-                      key={p.title}
-                      className="h-1 rounded-full bg-white/20"
-                      style={{ width: i === 0 ? '20px' : '6px', transition: 'width 0.2s' }}
-                    />
-                  ))}
-                </div>
-              </div>
+              <MobileProjectScroller
+                projects={content.projects.slice(1)}
+                zone={zone}
+                onSelect={(p) => { setSelectedProject(p); audio.play('click') }}
+              />
 
               <div className="px-6 pb-5 text-xs text-white/40 hidden lg:block">{zone.particleDescription}</div>
             </div>
@@ -911,30 +869,6 @@ export function ZoneSection({
                 </div>
               )}
 
-              {/* Architecture Diagram (ScrumMate only) */}
-              {selectedProject.title.toLowerCase().includes('scrum') && (
-                <div>
-                  <h4 className="text-[10px] tracking-[0.3em] text-white/50 uppercase mb-3">Architecture</h4>
-                  <pre
-                    className="overflow-x-auto rounded-xl border border-white/10 bg-black/50 px-4 py-4 text-[11px] leading-relaxed text-white/60 font-mono"
-                    style={{ boxShadow: `0 0 24px ${zone.accent1}08` }}
-                  >
-                    {SCRUMMATE_DIAGRAM}
-                  </pre>
-                </div>
-              )}
-
-              {/* Architecture Diagram (TechGenesys / Meeting Master) */}
-              {selectedProject.title.toLowerCase().includes('hotel') && false && (
-                <div>
-                  <h4 className="text-[10px] tracking-[0.3em] text-white/50 uppercase mb-3">System Diagram</h4>
-                  <pre
-                    className="overflow-x-auto rounded-xl border border-white/10 bg-black/50 px-4 py-4 text-[11px] leading-relaxed text-white/60 font-mono"
-                  >
-                    {MEETING_MASTER_DIAGRAM}
-                  </pre>
-                </div>
-              )}
 
               {/* Pipeline */}
               {selectedProject.pipeline && selectedProject.pipeline.length > 0 && (
@@ -1022,6 +956,99 @@ export function ZoneSection({
   )
 }
 
+function MobileProjectScroller({
+  projects,
+  zone,
+  onSelect,
+}: {
+  projects: Project[]
+  zone: ZoneConfig
+  onSelect: (p: Project) => void
+}) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const handleScroll = () => {
+    const el = scrollRef.current
+    if (!el) return
+    const idx = Math.round(el.scrollLeft / el.offsetWidth)
+    setActiveIndex(idx)
+  }
+
+  return (
+    <div className="relative lg:hidden px-4 pb-6">
+      <div
+        ref={scrollRef}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3"
+        style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+        onScroll={handleScroll}
+      >
+        {projects.map((p, idx) => (
+          <div
+            key={p.title}
+            className="w-full shrink-0 snap-center rounded-2xl border border-white/10 bg-black/28 p-4 cursor-pointer"
+            style={{ boxShadow: idx % 2 === 0 ? `0 0 24px ${zone.accent1}0a` : `0 0 24px ${zone.accent2}0a` }}
+            onClick={(e) => {
+              if ((e.target as HTMLElement).closest('a')) return
+              onSelect(p)
+            }}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="text-sm tracking-[0.12em] font-medium" style={{ color: zone.accent1 }}>
+                {p.title}
+              </div>
+              <div className="text-[10px] tracking-[0.24em] text-white/40 uppercase">
+                {p.status ?? 'active'}
+              </div>
+            </div>
+            <div className="mt-2 text-xs leading-relaxed text-white/70">{p.description}</div>
+            {p.impact && (
+              <div className="mt-2 rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 text-[11px] leading-relaxed" style={{ color: zone.accent2 }}>
+                <span className="text-white/35 mr-1">▸</span>{p.impact}
+              </div>
+            )}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {p.stack.slice(0, 5).map((t) => (
+                <span key={t} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/75">
+                  {t}
+                </span>
+              ))}
+            </div>
+            <div className="mt-3 flex items-center justify-between">
+              <a
+                className="inline-flex items-center gap-1.5 text-xs tracking-[0.14em] text-white/55 underline decoration-white/15 underline-offset-4 hover:text-white/85"
+                href={p.github}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IconBrandGithub size={13} />
+                GITHUB
+              </a>
+              <span className="text-[10px] tracking-[0.16em] text-white/45">
+                VIEW DETAILS →
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Active-tracking dots */}
+      <div className="mt-1 flex justify-center gap-1.5">
+        {projects.map((p, i) => (
+          <div
+            key={p.title}
+            className="h-1 rounded-full transition-all duration-200"
+            style={{
+              width: i === activeIndex ? '20px' : '6px',
+              backgroundColor: i === activeIndex ? zone.accent1 : 'rgba(255,255,255,0.2)',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function AbilityCard({ title, items, accent }: { title: string; items: readonly string[]; accent: string }) {
   return (
     <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-black/22 p-3 sm:p-4 md:p-5 md:backdrop-blur-sm">
@@ -1071,4 +1098,3 @@ function ContactRow({
 }
 
 export type { ZoneId } from '@/components/world/types'
-
