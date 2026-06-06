@@ -256,24 +256,7 @@ export const education: EducationEntry[] = [
       'Physics',
       'Chemistry',
     ],
-  },
-  {
-    institution: 'Beaconhouse School System',
-    degree: 'O-Level. GCSE',
-    period: 'Sep 2020 - Jun 2022',
-    location: 'Islamabad, Pakistan',
-    courses: [
-      'Mathematics',
-      'Physics',
-      'Chemistry',
-      'Computer Science',
-      'English Language',
-      'Urdu Language',
-      'Islamic Studies',
-      'Pakistan Studies',
-      'Global Perspectives'
-    ],
-  },
+  }
 ]
 
 // Utility: all coursework in one array

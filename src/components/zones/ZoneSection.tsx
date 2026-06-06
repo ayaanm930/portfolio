@@ -240,10 +240,13 @@ export function ZoneSection({
                 {/* Selected projects */}
                 <div className="mt-4">
                   <div className="text-[10px] tracking-[0.3em] text-white/40 mb-2">SELECTED SYSTEMS</div>
-                  <div className="flex flex-wrap gap-x-2 gap-y-1">
-                    {content.projects.map((p) => (
-                      <span key={p.title} className="text-[11px] text-white/60">
-                        {p.title}
+                  <div className="flex flex-wrap gap-x-1 gap-y-1">
+                    {content.projects.map((p, i) => (
+                      <span key={p.title} className="flex items-center gap-1">
+                        <span className="text-[11px] text-white/60">{p.title}</span>
+                        {i < content.projects.length - 1 && (
+                          <span className="text-[11px] text-white/25">·</span>
+                        )}
                       </span>
                     ))}
                   </div>
