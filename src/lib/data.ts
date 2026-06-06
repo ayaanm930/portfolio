@@ -17,7 +17,7 @@ export const personalInfo = {
 // ==================== SINGLE SOURCE OF TRUTH FOR SKILLS ====================
 export const technicalSkills = {
   'Backend / AI': ['Python', 'FastAPI', 'PyTorch', 'TensorFlow'],
-  'AI / ML': ['Voice AI', 'Hugging Face Transformers', 'Computer Vision', 'scikit-learn'],
+  'AI / ML': ['ASR', 'Hugging Face Transformers', 'Computer Vision', 'scikit-learn'],
   'LLM & NLP': ['Prompt Engineering', 'LLM Integration', 'Summarization Pipelines', 'RAG Workflows'],
   'Web / Mobile': ['React', 'Node.js', 'Express', 'MongoDB', 'REST APIs', 'Android (Kotlin)'],
   'DevOps & Tools': ['Git', 'Docker', 'Linux', 'CI/CD', 'n8n', 'AI-Assisted Development'],
