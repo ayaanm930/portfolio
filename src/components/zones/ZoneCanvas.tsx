@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ZoneConfig } from '@/components/world/types'
 
 type V2 = { x: number; y: number }
@@ -303,7 +303,7 @@ function drawCityBuildings(ctx: CanvasRenderingContext2D, w: number, h: number, 
   const alpha = 0.14 + depth * 0.18
   const baseY = h + parallax * (0.15 + depth * 0.22)
   const seed0 = depth * 53.9
-  const count = Math.floor(6 + depth * 4)
+  const count = Math.floor(3 + depth * 2)
 
   for (let i = 0; i < count; i++) {
     const s = rand(seed0 + i * 11.3)
@@ -852,21 +852,43 @@ export function ZoneCanvas({ zone, active }: { zone: ZoneConfig; active: boolean
   const tRef = useRef<number>(0)
   const lastRef = useRef<number>(0)
   const particlesRef = useRef<ParticleBase[]>([])
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    // Setup Intersection Observer to detect when canvas is visible
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold: 0.01 }
+    )
+    observer.observe(canvas)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || !isVisible) return
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
     let mounted = true
     const particles = particlesRef.current
 
+    // Detect device type for particle optimization
+    const isMobile = window.innerWidth < 768
+    const isTablet = window.innerWidth < 1024
+
     // init particles after first layout
     const init = () => {
       const { width: w, height: h } = dprScale(canvas, ctx)
       const area = w * h
-      const density =
+      
+      // Reduce particle counts based on device type
+      let density =
         zone.particleType === 'rain'
           ? 1 / 6500
           : zone.particleType === 'crystal'
@@ -876,7 +898,15 @@ export function ZoneCanvas({ zone, active }: { zone: ZoneConfig; active: boolean
               : zone.particleType === 'spores'
                 ? 1 / 14000
                 : 1 / 15000
-      const count = Math.max(24, Math.min(170, Math.floor(area * density)))
+      
+      // Apply device-specific reductions
+      if (isMobile) {
+        density *= 0.25 // 75% reduction on mobile
+      } else if (isTablet) {
+        density *= 0.4 // 60% reduction on tablet
+      }
+      
+      const count = Math.max(8, Math.min(70, Math.floor(area * density)))
       particles.splice(0, particles.length, ...makeParticles(count, w, h, zone.id.length * 1000 + count))
     }
 
@@ -963,7 +993,7 @@ export function ZoneCanvas({ zone, active }: { zone: ZoneConfig; active: boolean
       window.removeEventListener('resize', onResize)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [zone, active])
+  }, [zone, active, isVisible])
 
   return (
     <canvas

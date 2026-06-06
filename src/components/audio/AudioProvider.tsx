@@ -51,18 +51,16 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     setMuted(!muted)
   }, [setMuted, muted])
 
-  // Preload sounds once (and keep Howl instances stable).
-  useEffect(() => {
-    // Public paths you will add audio files to:
-    // - public/audio/ambient.mp3
-    // - public/audio/click.mp3
-    // - public/audio/gate.mp3
-    // - public/audio/map.mp3
+  // Lazy-load sounds only when needed (not on mount)
+  const initSounds = useCallback(() => {
+    if (ambientRef.current && sfxRef.current) return // Already initialized
+
     const ambient = new Howl({
       src: ['/audio/ambient.mp3'],
       loop: true,
-      volume: 0.0099,
+      volume: 0.01,
       html5: true,
+      preload: false,
       onloaderror: () => {
         // If no file exists, fail silently (site still works).
       },
@@ -72,18 +70,21 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       src: ['/audio/click.mp3'],
       volume: 0.1,
       html5: true,
+      preload: false,
       onloaderror: () => { },
     })
     const gate = new Howl({
       src: ['/audio/gate.mp3'],
       volume: 0.1,
       html5: true,
+      preload: false,
       onloaderror: () => { },
     })
     const map = new Howl({
       src: ['/audio/map.mp3'],
       volume: 0.1,
       html5: true,
+      preload: false,
       onloaderror: () => { },
     })
 
@@ -97,6 +98,10 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       map.unload()
     }
   }, [])
+
+  useEffect(() => {
+    return initSounds()
+  }, [initSounds])
 
   useEffect(() => {
     Howler.mute(muted)

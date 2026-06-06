@@ -28,7 +28,7 @@ export function WorldHud({
       <div className="fixed bottom-5 left-5 z-[60]">
         {collapsed ? (
           <div
-            className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/35 px-2 py-2 backdrop-blur-md"
+            className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/35 px-2 py-2 md:backdrop-blur-md"
             style={active ? { boxShadow: `0 0 24px ${active.accent2}22` } : undefined}
           >
             {/* avatar motif */}
@@ -61,7 +61,7 @@ export function WorldHud({
           </div>
         ) : (
           <div
-            className="rounded-2xl border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-md"
+            className="rounded-2xl border border-white/10 bg-black/35 px-4 py-3 md:backdrop-blur-md"
             style={
               active
                 ? {
@@ -122,7 +122,7 @@ export function WorldHud({
           type="button"
           sfx="map"
           className={cn(
-            'group relative inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm tracking-[0.12em] backdrop-blur-md',
+            'group relative inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm tracking-[0.12em] md:backdrop-blur-md',
             'text-white/85 hover:bg-black/55'
           )}
           onClick={onOpenMap}

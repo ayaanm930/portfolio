@@ -25,7 +25,7 @@ export function AreaDiscoveredOverlay({ discovery }: { discovery: DiscoveryEvent
             background: `radial-gradient(circle at 50% 50%, ${discovery.accent}55 0%, transparent 70%)`,
           }}
         />
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/45 backdrop-blur-md">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/45 md:backdrop-blur-md">
           <div className="px-4 py-3.5">
             <div className="text-[11px] tracking-[0.38em] text-white/70">AREA DISCOVERED</div>
             <div className="mt-1.5 flex items-baseline gap-2.5">

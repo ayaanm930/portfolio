@@ -157,10 +157,8 @@ export default function HomePage() {
       bgEl.style.backgroundColor = color
     }
 
-    let frame = 0
     const handleScroll = () => {
-      if (frame) cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(updateBackground)
+      updateBackground()
     }
 
     handleScroll()
@@ -170,7 +168,6 @@ export default function HomePage() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleScroll)
-      if (frame) cancelAnimationFrame(frame)
     }
   }, [zones])
 

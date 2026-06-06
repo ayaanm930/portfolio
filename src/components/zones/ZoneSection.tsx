@@ -156,11 +156,11 @@ export function ZoneSection({
         </div>
 
         {zone.id === 'void' && (
-          <div className="grid items-start gap-10 md:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid items-start gap-4 sm:gap-6 md:gap-10 grid-cols-1 md:grid-cols-[1.2fr_0.8fr]">
             <div>
               <div className="text-[12px] tracking-[0.34em] text-white/70">FOUND VESSEL</div>
               <h1
-                className="mt-3 text-4xl font-medium tracking-[0.18em] md:text-6xl"
+                className="mt-3 text-2xl sm:text-3xl font-medium tracking-[0.18em] md:text-4xl lg:text-6xl"
                 style={{
                   textShadow: `0 0 30px ${zone.accent1}22, 0 0 50px ${zone.accent2}14`,
                 }}
@@ -176,11 +176,11 @@ export function ZoneSection({
                 I build AI-powered applications: from a RAG-powered Scrum automation platform to an LSTM racing agent trained from scratch.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
                 <SfxButton
                   type="button"
                   className={cn(
-                    'inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm tracking-[0.16em]',
+                    'inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl border px-3 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.16em] flex-1 sm:flex-initial',
                     'bg-white/5 hover:bg-white/10 border-white/10 text-white/90'
                   )}
                   onClick={() => document.getElementById('zone-labs')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
@@ -191,7 +191,7 @@ export function ZoneSection({
                 <a
                   href={content.personalInfo.resumeUrl}
                   download
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/85 hover:bg-black/30"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl border border-white/10 bg-black/20 px-3 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.14em] text-white/85 hover:bg-black/30 flex-1 sm:flex-initial"
                 >
                   <IconDownload size={18} />
                   DOWNLOAD RESUME
@@ -200,7 +200,7 @@ export function ZoneSection({
                   href={content.personalInfo.github}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/80 hover:bg-black/30"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl border border-white/10 bg-black/20 px-3 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.14em] text-white/80 hover:bg-black/30 flex-1 sm:flex-initial"
                 >
                   <IconBrandGithub size={18} />
                   GITHUB
@@ -208,7 +208,7 @@ export function ZoneSection({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/30 p-5 backdrop-blur-sm">
+            <div className="hidden md:block rounded-2xl border border-white/10 bg-black/30 p-4 sm:p-5 md:backdrop-blur-sm">
               <div className="text-[11px] tracking-[0.34em] text-white/65">SOUL ESSENCE</div>
               <div className="mt-3 text-sm leading-relaxed text-white/70">{zone.particleDescription}</div>
               <div className="mt-5 text-[11px] tracking-[0.34em] text-white/55">DESCENT</div>
@@ -221,8 +221,8 @@ export function ZoneSection({
         )}
 
         {zone.id === 'core' && (
-          <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-6 backdrop-blur-sm">
+          <div className="grid gap-4 sm:gap-6 md:gap-10 grid-cols-1 md:grid-cols-[0.8fr_1.2fr]">
+            <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm">
               <div className="text-[11px] tracking-[0.38em] text-white/70">ABOUT</div>
               <h2 className="mt-3 text-2xl tracking-[0.16em]" style={{ color: zone.accent1 }}>
                 DEVELOPER PROFILE
@@ -233,12 +233,12 @@ export function ZoneSection({
               <div className="mt-5 text-xs text-white/65">{zone.particleDescription}</div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm md:p-8">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm lg:p-8">
               <div className="text-[11px] tracking-[0.38em] text-white/70">TECHNICAL SKILLS</div>
               <h2 className="mt-3 text-2xl tracking-[0.16em] mb-6" style={{ color: zone.accent1 }}>
                 ABILITY CLUSTERS
               </h2>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                 {Object.entries(content.technicalSkills).map(([group, items], idx) => (
                   <AbilityCard
                     key={group}
@@ -253,9 +253,9 @@ export function ZoneSection({
         )}
 
         {zone.id === 'labs' && (
-          <div className="grid items-stretch gap-10 lg:grid-cols-[1.25fr_0.75fr]">
+          <div className="grid items-stretch gap-4 sm:gap-6 lg:gap-10 grid-cols-1 lg:grid-cols-[1.25fr_0.75fr]">
             <div
-              className="group/featured relative rounded-2xl border border-white/10 bg-black/28 p-6 backdrop-blur-sm md:p-8 cursor-pointer hover:border-white/20 transition-all hover:scale-[1.002]"
+              className="group/featured relative rounded-xl sm:rounded-2xl border border-white/10 bg-black/28 p-4 sm:p-5 md:p-6 lg:p-8 md:backdrop-blur-sm cursor-pointer hover:border-white/20 transition-all hover:scale-[1.002]"
               onClick={(e) => {
                 if ((e.target as HTMLElement).closest('a, video, button')) {
                   return
@@ -282,7 +282,7 @@ export function ZoneSection({
                 </div>
               </div>
 
-              <h2 className="mt-4 text-3xl tracking-[0.16em]" style={{ color: zone.text }}>
+              <h2 className="mt-3 sm:mt-4 text-xl sm:text-2xl lg:text-3xl tracking-[0.16em]" style={{ color: zone.text }}>
                 {content.projects[0]?.title}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-white/75 md:text-base">
@@ -291,7 +291,7 @@ export function ZoneSection({
 
               {/* Case-study: Problem / Solution / Impact */}
               {(content.projects[0]?.problem || content.projects[0]?.solution || content.projects[0]?.impact) && (
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="mt-4 sm:mt-5 grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-3">
                   {content.projects[0]?.problem && (
                     <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs">
                       <div className="text-[10px] tracking-[0.3em] text-white/45 mb-1">PROBLEM</div>
@@ -365,11 +365,11 @@ export function ZoneSection({
                 )}
               </div>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-6 sm:mt-7 flex flex-col gap-2 sm:gap-3 sm:flex-row">
                 <SfxButton
                   type="button"
                   className={cn(
-                    'inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm tracking-[0.14em] text-white/90 hover:bg-white/10'
+                    'inline-flex items-center justify-center rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 px-4 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.14em] text-white/90 hover:bg-white/10'
                   )}
                   onClick={() => {
                     setSelectedProject(content.projects[0])
@@ -378,7 +378,7 @@ export function ZoneSection({
                   VIEW DETAILS & HIGHLIGHTS
                 </SfxButton>
                 <a
-                  className="inline-flex items-center gap-2 justify-center rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm tracking-[0.14em] text-white/90 hover:bg-black/30"
+                  className="inline-flex items-center gap-2 justify-center rounded-xl sm:rounded-2xl border border-white/10 bg-black/20 px-4 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.14em] text-white/90 hover:bg-black/30"
                   href={content.projects[0]?.github ?? '#'}
                   target="_blank"
                   rel="noreferrer"
@@ -437,7 +437,7 @@ export function ZoneSection({
             </div>
 
             {/* ── OTHER LABS - scrollable panel ── */}
-            <div className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/22 backdrop-blur-sm" style={{ minHeight: 0 }}>
+            <div className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/22 md:backdrop-blur-sm" style={{ minHeight: 0 }}>
               {/* Header */}
               <div className="flex items-center justify-between gap-3 px-6 pt-6 pb-3">
                 <div className="text-[11px] tracking-[0.38em] text-white/70">OTHER LABS</div>
@@ -593,8 +593,8 @@ export function ZoneSection({
         )}
 
         {zone.id === 'logs' && (
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-black/24 p-6 backdrop-blur-sm md:p-8">
+          <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 lg:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-black/24 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm lg:p-8">
               <div className="text-[11px] tracking-[0.38em] text-white/70">MISSION LOG</div>
               <div className="mt-2 text-xs tracking-[0.24em] text-white/55">Remember: open each log to reveal the mission's hidden echoes.</div>
               <div className="mt-4 space-y-3">
@@ -626,7 +626,7 @@ export function ZoneSection({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/24 p-6 backdrop-blur-sm md:p-8">
+            <div className="rounded-2xl border border-white/10 bg-black/24 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm lg:p-8">
               <div className="text-[11px] tracking-[0.38em] text-white/70">ORIGIN DATA</div>
               <div className="mt-2 text-xs tracking-[0.24em] text-white/55">Unearth the archive - expand each origin entry to reveal the deeper memory.</div>
               <div className="mt-4 space-y-3">
@@ -666,9 +666,9 @@ export function ZoneSection({
         )}
 
         {zone.id === 'signal' && (
-          <div className="grid gap-10">
+          <div className="grid gap-4 sm:gap-6 lg:gap-10">
 
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm md:p-8">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm lg:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <div className="text-[11px] tracking-[0.38em] text-white/70">CONTACT</div>
@@ -680,18 +680,18 @@ export function ZoneSection({
                   </p>
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] tracking-[0.28em] text-white/85 shrink-0">
-                  <span className="mr-2 inline-block h-2 w-2 rounded-full align-middle animate-pulse" style={{ backgroundColor: zone.accent1 }} />
+                  <span className="mr-2 inline-block h-2 w-1 rounded-full align-middle animate-pulse" style={{ backgroundColor: zone.accent1 }} />
                   AVAILABLE
                 </div>
               </div>
 
-              <div className="mt-6 space-y-4">
+              <div className="mt-6 space-y-3 sm:space-y-4">
                 {/* Icon buttons for Email, GitHub, LinkedIn, Resume */}
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-2 sm:gap-3 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4">
                   <a
                     href={`mailto:${content.personalInfo.email}`}
                     aria-label="Send email"
-                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2 rounded-lg sm:rounded-2xl border border-white/10 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent1}10` }}
                   >
                     <IconMail size={18} style={{ color: zone.accent1 }} />
@@ -702,7 +702,7 @@ export function ZoneSection({
                     target="_blank"
                     rel="noreferrer"
                     aria-label="GitHub profile"
-                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2 rounded-lg sm:rounded-2xl border border-white/10 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent1}10` }}
                   >
                     <IconBrandGithub size={18} style={{ color: zone.accent1 }} />
@@ -713,7 +713,7 @@ export function ZoneSection({
                     target="_blank"
                     rel="noreferrer"
                     aria-label="LinkedIn profile"
-                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2 rounded-lg sm:rounded-2xl border border-white/10 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent1}10` }}
                   >
                     <IconBrandLinkedin size={18} style={{ color: zone.accent1 }} />
@@ -723,7 +723,7 @@ export function ZoneSection({
                     href={content.personalInfo.resumeUrl}
                     download
                     aria-label="Download resume"
-                    className="group flex min-w-0 items-center gap-2.5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
+                    className="group flex min-w-0 items-center gap-2 rounded-lg sm:rounded-2xl border border-white/10 bg-black/20 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm tracking-[0.12em] text-white/80 hover:bg-black/35 hover:border-white/20 transition-colors"
                     style={{ boxShadow: `0 0 20px ${zone.accent2}10` }}
                   >
                     <IconDownload size={18} style={{ color: zone.accent2 }} />
@@ -748,14 +748,14 @@ export function ZoneSection({
           </div>
         )}
 
-        <div className="mt-12 rounded-2xl border border-white/10 bg-black/10 p-5 text-xs text-white/55 backdrop-blur-sm">
+        <div className="mt-8 sm:mt-10 lg:mt-12 rounded-2xl border border-white/10 bg-black/10 p-4 sm:p-5 text-xs text-white/55 md:backdrop-blur-sm">
           <div className="tracking-[0.3em] text-white/60">ZONE NOTES</div>
           <div className="mt-2 leading-relaxed">{zone.zoneDescription}</div>
         </div>
       </div>
 
       {resumeOpen && (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 p-4 backdrop-blur-2xl">
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 p-4 md:backdrop-blur-2xl">
           <div
             className="relative w-full max-w-6xl overflow-hidden rounded-3xl border bg-black/90 shadow-2xl"
             style={{
@@ -806,14 +806,14 @@ export function ZoneSection({
       {/* ── PROJECT DETAILS HOVERING CARD MODAL ── */}
       {selectedProject && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md transition-all duration-300"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 md:backdrop-blur-md transition-all duration-300"
           onClick={() => {
             setSelectedProject(null)
             audio.play('click')
           }}
         >
           <div
-            className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden rounded-3xl border border-white/10 bg-[#02050c]/95 shadow-2xl backdrop-blur-xl flex flex-col p-6 md:p-8 transition-transform duration-300 scale-100"
+            className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl border border-white/10 bg-[#02050c]/95 shadow-2xl md:backdrop-blur-xl flex flex-col p-4 sm:p-6 md:p-8 transition-transform duration-300 scale-100"
             onClick={(e) => e.stopPropagation()}
             style={{
               boxShadow: `0 0 50px ${zone.accent1}1f`,
@@ -1024,7 +1024,7 @@ export function ZoneSection({
 
 function AbilityCard({ title, items, accent }: { title: string; items: readonly string[]; accent: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/22 p-5 backdrop-blur-sm">
+    <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-black/22 p-3 sm:p-4 md:p-5 md:backdrop-blur-sm">
       <div className="text-[11px] tracking-[0.38em] text-white/70">{title}</div>
       <div className="mt-3 flex flex-wrap gap-2">
         {items.map((x) => (

@@ -21,6 +21,13 @@
     scroll-behavior: smooth;
     scroll-padding-top: 2rem;
   }
+  
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  
   body {
     background-color: #0a0a0a;
     color: #e2ddd6;
@@ -42,7 +49,12 @@
     z-index: 10;
     max-width: 72rem;
     margin: 0 auto;
-    padding: 5rem 1.5rem;
+    padding: 3rem 1rem;
+  }
+  @media (min-width: 640px) {
+    .zone-content {
+      padding: 4rem 1.5rem;
+    }
   }
   @media (min-width: 768px) {
     .zone-content {
@@ -94,6 +106,12 @@
     );
     filter: blur(28px);
     will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-glow {
+      display: none;
+    }
   }
 
   .cursor-img {

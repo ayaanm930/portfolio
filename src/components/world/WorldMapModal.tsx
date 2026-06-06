@@ -54,10 +54,10 @@ export function WorldMapModal({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
         >
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm md:backdrop-blur-sm" onClick={onClose} />
 
           <motion.div
-            className="absolute left-1/2 top-1/2 w-[min(62rem,94vw)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-white/10 bg-black/55 backdrop-blur-md"
+            className="absolute left-1/2 top-1/2 w-[min(62rem,95vw)] -translate-x-1/2 -translate-y-1/2 max-h-[95vh] overflow-hidden rounded-2xl border border-white/10 bg-black/55 md:backdrop-blur-md"
             initial={{ opacity: 0, y: 20, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.99 }}
@@ -164,7 +164,7 @@ export function WorldMapModal({
                           <div className="flex flex-col items-center gap-1">
                             <div
                               className={cn(
-                                'rounded-full border px-3 py-1 text-[10px] tracking-[0.28em] backdrop-blur-md',
+                                'rounded-full border px-3 py-1 text-[10px] tracking-[0.28em] md:backdrop-blur-md',
                                 isActive
                                   ? 'border-white/25 bg-white/10 text-white'
                                   : 'border-white/10 bg-black/30 text-white/75'
