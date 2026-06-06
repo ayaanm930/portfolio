@@ -27,7 +27,7 @@ export default function HomePage() {
           accent2: '#c8c8d8',
           text: '#f2f2f8',
           particleType: 'soul',
-          particleDescription: 'Soul essence - amber motes swimming in the basin’s hush',
+          particleDescription: 'Soul essence - achromatic orbs swimming in the basin’s hush',
           zoneDescription:
             'Ancient Basin. Hollow stone holds a current of quiet light. Silent pillars and drifting motes suggest a path that only those who listen will recognise.',
         },
@@ -42,7 +42,7 @@ export default function HomePage() {
           accent2: '#90abc8',
           text: '#d0e1f0',
           particleType: 'rain',
-          particleDescription: 'City rain - silver threads falling through carved arches',
+          particleDescription: 'City rain - silver threads falling through cerulean clouds',
           zoneDescription:
             'City of Tears. Vaulted ribs and patient stone shape the light into ordered columns. The air here carries a steady professionalism, like work honed by careful repetition.',
         },
@@ -72,7 +72,7 @@ export default function HomePage() {
           accent2: '#d19a5c',
           text: '#f0e0b8',
           particleType: 'spirits',
-          particleDescription: 'Dream motes - violet wisps rising from quiet stones',
+          particleDescription: 'Dream motes - amber wisps rising from quiet stones',
           zoneDescription:
             'Resting Grounds. Rows of weathered markers and a lone sentinel tree keep watch over quiet memory. The air here feels less about display and more about what has already been recorded.',
         },
