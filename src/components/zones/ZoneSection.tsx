@@ -210,7 +210,7 @@ export function ZoneSection({
                         <span className="h-1 w-1 shrink-0 rounded-full mt-1.5" style={{ backgroundColor: zone.accent1 }} />
                         <span className="text-[11px] text-white/75 leading-relaxed">
                           <span className="text-white/90">{exp.company}</span>
-                          <span className="text-white/45"> — {exp.role}</span>
+                          <span className="text-white/45"> ● {exp.role}</span>
                         </span>
                       </li>
                     ))}
@@ -228,7 +228,7 @@ export function ZoneSection({
                         <span className="h-1 w-1 shrink-0 rounded-full mt-1.5" style={{ backgroundColor: zone.accent2 }} />
                         <span className="text-[11px] text-white/75 leading-relaxed">
                           <span className="text-white/90">{edu.institution}</span>
-                          <span className="text-white/45"> — {edu.degree}</span>
+                          <span className="text-white/45"> ● {edu.degree}</span>
                         </span>
                       </li>
                     ))}
@@ -245,7 +245,7 @@ export function ZoneSection({
                       <span key={p.title} className="flex items-center gap-1">
                         <span className="text-[11px] text-white/60">{p.title}</span>
                         {i < content.projects.length - 1 && (
-                          <span className="text-[11px] text-white/25">·</span>
+                          <span className="text-[11px] text-white/25">●</span>
                         )}
                       </span>
                     ))}
