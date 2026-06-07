@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils'
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   sfx?: 'click' | 'map'
+  skipSfx?: boolean
 }
 
-export function SfxButton({ className, sfx = 'click', onClick, ...rest }: Props) {
+export function SfxButton({ className, sfx = 'click', skipSfx = false, onClick, ...rest }: Props) {
   const audio = useAudio()
   return (
     <button
@@ -17,11 +18,10 @@ export function SfxButton({ className, sfx = 'click', onClick, ...rest }: Props)
         className
       )}
       onClick={(e) => {
-        audio.play(sfx)
+        if (!skipSfx && !audio.muted) audio.play(sfx)
         onClick?.(e)
       }}
       {...rest}
     />
   )
 }
-

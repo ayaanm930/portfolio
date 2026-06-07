@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { IconChevronDown, IconChevronUp, IconMap2, IconVolume, IconVolumeOff } from '@tabler/icons-react'
+import { IconChevronDown, IconChevronUp, IconMap2, IconVolume, IconVolume2, IconVolumeOff } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { SfxButton } from '@/components/ui/SfxButton'
 import { useAudio } from '@/components/audio/AudioProvider'
@@ -22,6 +22,16 @@ export function WorldHud({
   const audio = useAudio()
   const active = zones.find((z) => z.id === activeZoneId)
   const [collapsed, setCollapsed] = useState(true)
+
+  const handleMuteToggle = () => {
+    audio.setMuted(!audio.muted)
+  }
+
+  const VolumeIcon = audio.muted
+    ? IconVolumeOff
+    : audio.volume > 0.5
+    ? IconVolume
+    : IconVolume2
 
   return (
     <>
@@ -45,10 +55,11 @@ export function WorldHud({
             <SfxButton
               type="button"
               className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/85 hover:bg-white/10"
-              onClick={() => audio.toggleMuted()}
+              skipSfx
+              onClick={handleMuteToggle}
               aria-label={audio.muted ? 'Unmute audio' : 'Mute audio'}
             >
-              {audio.muted ? <IconVolumeOff size={16} /> : <IconVolume size={16} />}
+              <VolumeIcon size={16} />
             </SfxButton>
             <SfxButton
               type="button"
@@ -64,9 +75,7 @@ export function WorldHud({
             className="rounded-2xl border border-white/10 bg-black/35 px-4 py-3 md:backdrop-blur-md"
             style={
               active
-                ? {
-                  boxShadow: `0 0 30px ${active.accent2}22`,
-                }
+                ? { boxShadow: `0 0 30px ${active.accent2}22` }
                 : undefined
             }
           >
@@ -90,6 +99,7 @@ export function WorldHud({
                 <IconChevronDown size={14} />
               </SfxButton>
             </div>
+
             <div className="mt-1 flex items-center gap-2">
               <div
                 className="h-2.5 w-2.5 rounded-full"
@@ -99,19 +109,49 @@ export function WorldHud({
                 }}
               />
               <div className="text-sm tracking-[0.12em]" style={{ color: active?.text ?? '#fff' }}>
-                {active?.name ?? '—'}
+                {active?.name ?? ''}
               </div>
             </div>
             <div className="mt-1 text-xs text-white/55 tracking-wide">{active?.biomeRef ?? ''}</div>
-            <div className="mt-3 flex items-center gap-2">
-              <SfxButton
+
+            {/* Audio controls */}
+            <div className="mt-3 flex flex-col gap-2">
+              <button
                 type="button"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs tracking-[0.14em] text-white/80 hover:bg-white/10"
-                onClick={() => audio.toggleMuted()}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs tracking-[0.14em] text-white/80 hover:bg-white/10 transition-colors"
+                onClick={handleMuteToggle}
               >
-                {audio.muted ? <IconVolumeOff size={16} /> : <IconVolume size={16} />}
-                {audio.muted ? 'MUTED' : 'AUDIO'}
-              </SfxButton>
+                <VolumeIcon size={16} />
+                {audio.muted ? 'MUTED' : 'AUDIO ON'}
+              </button>
+
+              {/* Volume slider — only shown when unmuted */}
+              {!audio.muted && (
+                <div className="flex items-center gap-2 px-1">
+                  <IconVolumeOff size={12} className="shrink-0 text-white/35" />
+                  <div className="relative flex-1 h-1 rounded-full bg-white/10">
+                    <div
+                      className="absolute left-0 top-0 h-full rounded-full transition-all"
+                      style={{
+                        width: `${audio.volume * 100}%`,
+                        backgroundColor: active?.accent1 ?? '#fff',
+                        boxShadow: `0 0 6px ${active?.accent1 ?? '#fff'}88`,
+                      }}
+                    />
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={audio.volume}
+                      onChange={(e) => audio.setVolume(Number(e.target.value))}
+                      className="absolute inset-0 w-full cursor-pointer opacity-0 h-full"
+                      aria-label="Volume"
+                    />
+                  </div>
+                  <IconVolume size={12} className="shrink-0 text-white/35" />
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -146,4 +186,3 @@ export function WorldHud({
     </>
   )
 }
-

@@ -63,19 +63,19 @@ export const projects: Project[] = [
   title: 'Automated Scrum Master (ScrumMate)',
   type: 'Final Year Project',
   status: 'completed',
-  period: 'Aug 2025 – May 2026',
+  period: 'Aug 2025 to May 2026',
   description:
-    'Multi-agent AI system that automates the full Scrum lifecycle — real-time meeting transcription with speaker diarization, LLM-extracted user stories and action items, skill-based task assignment, and a RAG interface for querying your entire project history.',
+    'Multi-agent AI system that automates the full Scrum lifecycle, real-time meeting transcription with speaker diarization, LLM-extracted user stories and action items, skill-based task assignment, and a RAG interface for querying your entire project history.',
   problem:
-    'Agile teams waste hours on manual coordination — writing meeting notes, updating boards, and assigning tasks — instead of shipping.',
+    'Agile teams waste hours on manual coordination, writing meeting notes, updating boards, and assigning tasks, instead of shipping.',
   solution:
     'Event-driven multi-agent pipeline that ingests meeting audio, extracts structured sprint artifacts via LLMs, and syncs them to Trello automatically.',
   impact:
-    'Processes 1+ hour meetings and generates sprint-ready user stories in <30 sec; reduces post-meeting admin work by ~70%. 94.3% pass rate across 35 unit tests.',
+    'Processes 1+ hour meetings and generates sprint-ready user stories in under 30 sec; reduces post-meeting admin work by ~70%. 94.3% pass rate across 35 unit tests.',
   challenges: [
-    'Speaker-aware RAG chunking — preserving speaker turns and context across transcript segments while respecting LLM token limits',
-    'Hierarchical summarisation — three-level abstraction from raw chunks to topic summaries to executive overview using Llama 3.2',
-    'Hybrid task assignment — combining rule-based skill matching with LLM reasoning to balance workload across developers',
+    'Speaker-aware RAG chunking, preserving speaker turns and context across transcript segments while respecting LLM token limits',
+    'Hierarchical summarisation, three-level abstraction from raw chunks to topic summaries to executive overview using Llama 3.2',
+    'Hybrid task assignment, combining rule-based skill matching with LLM reasoning to balance workload across developers',
     'OAuth integration complexity with Jira and GitHub required significant debugging to achieve reliable bidirectional sync',
   ],
   stack: ['Python', 'FastAPI', 'LangGraph', 'Ollama (Llama 3.2)', 'n8n', 'PostgreSQL', 'ChromaDB', 'React'],
@@ -91,9 +91,9 @@ export const projects: Project[] = [
   ],
   github: 'https://github.com/mishalali-A2/ScrumMate',
   highlights: [
-    'Event-driven microservices architecture with three specialised agents — Scheduler, Collector, Facilitator — communicating through a message queue for independent scaling and fault isolation',
+    'Event-driven microservices architecture with three specialised agents, Scheduler, Collector, Facilitator, communicating through a message queue for independent scaling and fault isolation',
     'Speaker-aware chunking algorithm preserves conversational context across transcript segments, feeding a ChromaDB vector store for semantic search across all past meetings',
-    'Hybrid assignment algorithm scores developers by skill overlap, availability, preference, and historical completion rate — then uses LLM reasoning to finalise allocations',
+    'Hybrid assignment algorithm scores developers by skill overlap, availability, preference, and historical completion rate, then uses LLM reasoning to finalise allocations',
     '35 unit tests across all 8 modules with 94.3% pass rate and 85% code coverage; external Jira/GitHub sync partially realised pending OAuth refinement',
   ],
 },
@@ -107,7 +107,7 @@ export const projects: Project[] = [
     problem:
       'Monolithic hotel booking apps create deployment bottlenecks and tightly coupled service failures.',
     solution:
-      'Three decoupled Node.js/Express microservices — User, Hotel, Booking — each containerised independently with Docker Compose.',
+      'Three decoupled Node.js/Express microservices, User, Hotel, Booking, each containerised independently with Docker Compose.',
     impact:
       'Containerised 3+ independent services with one-command local deployment and ≥70% automated test coverage per service.',
     challenges: [
@@ -119,7 +119,7 @@ export const projects: Project[] = [
     stack: ['Node.js', 'Express', 'React', 'MongoDB', 'Docker', 'Docker Compose', 'Jest', 'Supertest'],
     github: 'https://github.com/AyaanKhan1576/Hotel-Booking-Microservices',
     highlights: [
-      'Three decoupled services — User, Hotel, and Booking — each with its own container and MongoDB instance',
+      'Three decoupled services, User, Hotel, and Booking, each with its own container and MongoDB instance',
       'User service handles registration, authentication, loyalty program enrollment/redemption, and favorites',
       'Booking service supports individual and group bookings, cancellations, payments, and loyalty point awards',
       'Single React frontend consuming all three service APIs across user, hotel, and booking modules',
@@ -168,7 +168,7 @@ export const projects: Project[] = [
       'Native Kotlin Android frontend backed by a PHP REST API that persists habits, streaks, and progress server-side.',
     impact: 'Full-stack native Android app with daily habit tracking, streak management, and reliable cloud sync.',
     challenges: [
-      'Native Android UI in Kotlin with Gradle build system — no cross-platform shortcuts',
+      'Native Android UI in Kotlin with Gradle build system, no cross-platform shortcuts',
       'Designing a PHP REST backend capable of real-time streak calculation',
       'Full-stack directory separation (app/ and backend/) for clean deployment',
     ],
@@ -193,7 +193,7 @@ export const projects: Project[] = [
     solution:
       'Hybrid MPI + OpenMP parallelism with METIS-based graph partitioning to distribute work across nodes while minimising cross-node communication.',
     impact:
-      'Achieved 4× speedup over sequential with 4 MPI ranks, plus an additional 15–30% gain from layered OpenMP threads.',
+      'Achieved 4× speedup over sequential with 4 MPI ranks, plus an additional 15 to 30% gain from layered OpenMP threads.',
     challenges: [
       'METIS-based graph partitioning to minimise cross-node communication overhead',
       'Combining MPI inter-node and OpenMP intra-node parallelism without race conditions',
@@ -205,7 +205,7 @@ export const projects: Project[] = [
       'Hybrid parallelism combining MPI for inter-node and OpenMP for intra-node computation',
       'METIS-based graph partitioning to minimize cross-node communication overhead',
       'Up to 4x speedup over sequential execution with 4 MPI ranks on large graphs',
-      'Additional 15–30% performance gain from layering OpenMP threads over MPI processes',
+      'Additional 15 to 30% performance gain from layering OpenMP threads over MPI processes',
       'Supports sequential, OpenMP-only, MPI-only, and hybrid execution modes with benchmark logging',
     ],
   },

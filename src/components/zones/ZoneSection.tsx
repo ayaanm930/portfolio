@@ -630,9 +630,15 @@ export function ZoneSection({
           <div className="grid gap-4 sm:gap-6 lg:gap-10">
 
             <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:p-5 md:p-6 md:backdrop-blur-sm lg:p-8">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
-                  <div className="text-[11px] tracking-[0.38em] text-white/70">CONTACT</div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-[11px] tracking-[0.38em] text-white/70">CONTACT</div>
+                    <div className="sm:hidden inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] tracking-[0.24em] text-white/85">
+                      <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: zone.accent1 }} />
+                      AVAILABLE
+                    </div>
+                  </div>
                   <h2 className="mt-3 text-2xl tracking-[0.16em]" style={{ color: zone.accent1 }}>
                     OPEN TO OPPORTUNITIES
                   </h2>
@@ -640,8 +646,8 @@ export function ZoneSection({
                     Looking for opportunities in AI engineering, backend development, and full-stack systems.
                   </p>
                 </div>
-                <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] tracking-[0.28em] text-white/85 shrink-0">
-                  <span className="mr-2 inline-block h-2 w-1 rounded-full align-middle animate-pulse" style={{ backgroundColor: zone.accent1 }} />
+                <div className="hidden sm:inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] tracking-[0.28em] text-white/85 shrink-0 self-start">
+                  <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: zone.accent1 }} />
                   AVAILABLE
                 </div>
               </div>
