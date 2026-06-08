@@ -18,7 +18,7 @@ export const personalInfo = {
 export const technicalSkills = {
   'Backend / AI': ['Python', 'FastAPI', 'PyTorch', 'TensorFlow'],
   'AI / ML': ['ASR', 'Hugging Face Transformers', 'Computer Vision', 'scikit-learn'],
-  'LLM & NLP': ['Prompt Engineering', 'LLM Integration', 'Summarization Pipelines', 'RAG Workflows'],
+  'LLM & NLP': ['Prompt Engineering', 'LLM Integration', 'Automation Pipelines', 'RAG Workflows'],
   'Web / Mobile': ['React', 'Node.js', 'Express', 'MongoDB', 'REST APIs', 'Android (Kotlin)'],
   'DevOps & Tools': ['Git', 'Docker', 'Linux', 'CI/CD', 'n8n', 'AI-Assisted Development'],
 }
@@ -60,43 +60,43 @@ export type Project = {
 // ==================== PROJECTS ====================
 export const projects: Project[] = [
   {
-  title: 'Automated Scrum Master (ScrumMate)',
-  type: 'Final Year Project',
-  status: 'completed',
-  period: 'Aug 2025 to May 2026',
-  description:
-    'Multi-agent AI system that automates the full Scrum lifecycle, real-time meeting transcription with speaker diarization, LLM-extracted user stories and action items, skill-based task assignment, and a RAG interface for querying your entire project history.',
-  problem:
-    'Agile teams waste hours on manual coordination, writing meeting notes, updating boards, and assigning tasks, instead of shipping.',
-  solution:
-    'Event-driven multi-agent pipeline that ingests meeting audio, extracts structured sprint artifacts via LLMs, and syncs them to Trello automatically.',
-  impact:
-    'Processes 1+ hour meetings and generates sprint-ready user stories in under 30 sec; reduces post-meeting admin work by ~70%. 94.3% pass rate across 35 unit tests.',
-  challenges: [
-    'Speaker-aware RAG chunking, preserving speaker turns and context across transcript segments while respecting LLM token limits',
-    'Hierarchical summarisation, three-level abstraction from raw chunks to topic summaries to executive overview using Llama 3.2',
-    'Hybrid task assignment, combining rule-based skill matching with LLM reasoning to balance workload across developers',
-    'OAuth integration complexity with Jira and GitHub required significant debugging to achieve reliable bidirectional sync',
-  ],
-  stack: ['Python', 'FastAPI', 'LangGraph', 'Ollama (Llama 3.2)', 'n8n', 'PostgreSQL', 'ChromaDB', 'React'],
-  pipeline: [
-    'Audio Ingestion & Transcription',
-    'Speaker Diarization',
-    'RAG Chunking',
-    'Hierarchical Summarisation',
-    'User Story & Action Item Extraction',
-    'Skill-Based Task Assignment',
-    'Trello Sync via n8n',
-    'RAG Query Interface',
-  ],
-  github: 'https://github.com/mishalali-A2/ScrumMate',
-  highlights: [
-    'Event-driven microservices architecture with three specialised agents, Scheduler, Collector, Facilitator, communicating through a message queue for independent scaling and fault isolation',
-    'Speaker-aware chunking algorithm preserves conversational context across transcript segments, feeding a ChromaDB vector store for semantic search across all past meetings',
-    'Hybrid assignment algorithm scores developers by skill overlap, availability, preference, and historical completion rate, then uses LLM reasoning to finalise allocations',
-    '35 unit tests across all 8 modules with 94.3% pass rate and 85% code coverage; external Jira/GitHub sync partially realised pending OAuth refinement',
-  ],
-},
+    title: 'Automated Scrum Master (ScrumMate)',
+    type: 'Final Year Project',
+    status: 'completed',
+    period: 'Aug 2025 to May 2026',
+    description:
+      'Multi-agent AI system that automates the full Scrum lifecycle, real-time meeting transcription with speaker diarization, LLM-extracted user stories and action items, skill-based task assignment, and a RAG interface for querying your entire project history.',
+    problem:
+      'Agile teams waste hours on manual coordination, writing meeting notes, updating boards, and assigning tasks, instead of shipping.',
+    solution:
+      'Event-driven multi-agent pipeline that ingests meeting audio, extracts structured sprint artifacts via LLMs, and syncs them to Trello automatically.',
+    impact:
+      'Processes 1+ hour meetings and generates sprint-ready user stories in under 30 sec; reduces post-meeting admin work by ~70%. 94.3% pass rate across 35 unit tests.',
+    challenges: [
+      'Speaker-aware RAG chunking, preserving speaker turns and context across transcript segments while respecting LLM token limits',
+      'Hierarchical summarisation, three-level abstraction from raw chunks to topic summaries to executive overview using Llama 3.2',
+      'Hybrid task assignment, combining rule-based skill matching with LLM reasoning to balance workload across developers',
+      'OAuth integration complexity with Jira and GitHub required significant debugging to achieve reliable bidirectional sync',
+    ],
+    stack: ['Python', 'FastAPI', 'LangGraph', 'Ollama (Llama 3.2)', 'n8n', 'PostgreSQL', 'ChromaDB', 'React'],
+    pipeline: [
+      'Audio Ingestion & Transcription',
+      'Speaker Diarization',
+      'RAG Chunking',
+      'Hierarchical Summarisation',
+      'User Story & Action Item Extraction',
+      'Skill-Based Task Assignment',
+      'Trello Sync via n8n',
+      'RAG Query Interface',
+    ],
+    github: 'https://github.com/mishalali-A2/ScrumMate',
+    highlights: [
+      'Event-driven microservices architecture with three specialised agents, Scheduler, Collector, Facilitator, communicating through a message queue for independent scaling and fault isolation',
+      'Speaker-aware chunking algorithm preserves conversational context across transcript segments, feeding a ChromaDB vector store for semantic search across all past meetings',
+      'Hybrid assignment algorithm scores developers by skill overlap, availability, preference, and historical completion rate, then uses LLM reasoning to finalise allocations',
+      '35 unit tests across all 8 modules with 94.3% pass rate and 85% code coverage; external Jira/GitHub sync partially realised pending OAuth refinement',
+    ],
+  },
   {
     title: 'Hotel Booking Microservices Platform',
     type: 'Full-stack',
