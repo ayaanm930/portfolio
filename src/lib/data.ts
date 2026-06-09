@@ -182,6 +182,33 @@ export const projects: Project[] = [
     ],
   },
   {
+    "title": "Cloud‑Native Microservices Deployment Pipeline",
+    "type": "DevOps / Cloud Infrastructure",
+    "status": "completed",
+    "period": "2025",
+    "description": "End‑to‑end automated deployment of a three‑tier microservices application (React frontend, Node.js auth, FastAPI data) onto AWS EC2 using Terraform, Ansible, Kubernetes (MicroK8s), and ArgoCD, following GitOps principles.",
+    "problem": "Manual provisioning and configuration of cloud infrastructure leads to environment drift, slow deployments, and inconsistent cluster setups across development and production.",
+    "solution": "Infrastructure as Code with Terraform for AWS resources, Ansible for configuration management, and ArgoCD for GitOps‑driven continuous delivery – all triggered by GitHub Actions on code pushes.",
+    "impact": "Provisioned a full AWS VPC and EC2 instance with one Terraform command; automated Kubernetes cluster setup (MicroK8s) via Ansible; achieved automatic sync of Kubernetes manifests with ArgoCD, reducing manual intervention by 90%.",
+    "challenges": [
+      "Designing Terraform modules for repeatable AWS EC2, VPC, and security group provisioning",
+      "Writing idempotent Ansible playbooks to install MicroK8s, enable addons, and configure ArgoCD on a fresh Ubuntu instance",
+      "Integrating GitHub Actions to rebuild Docker images and update image tags in Kubernetes manifests",
+      "Configuring ArgoCD to monitor the GitHub repository’s k8s/ folder and auto‑sync without custom scripts",
+      "Debugging cross‑service networking inside MicroK8s for React, Node.js, and FastAPI containers"
+    ],
+    "stack": ["Terraform", "Ansible", "Kubernetes (MicroK8s)", "ArgoCD", "GitHub Actions", "Docker", "AWS EC2", "React", "Node.js", "Python (FastAPI)"],
+    "github": "https://github.com/ayaanm930/microservices-cloudproject3",
+    "highlights": [
+      "Full infrastructure provisioning: Terraform creates EC2 instance, VPC, subnets, and security groups on AWS",
+      "Configuration management: Ansible playbook idempotently installs MicroK8s, enables DNS and registry addons, and deploys ArgoCD",
+      "GitOps CD pipeline: ArgoCD watches the k8s/ directory and automatically syncs cluster state on every commit to main",
+      "CI automation: GitHub Actions rebuilds Docker images for all three services and updates Kubernetes manifests with new image tags",
+      "Three microservices: React frontend, Node.js auth service, and FastAPI data service, each with its own Dockerfile and Kubernetes deployment",
+      "Entire workflow reproducible with a single git clone, Terraform apply, and Ansible run – no manual cloud console clicks"
+    ]
+  },
+  {
     title: 'Parallel Butterfly Counting in Bipartite Graphs',
     type: 'Systems / HPC',
     status: 'completed',
